@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D & 3D Online Official Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+        body {
+            font-family: 'Padauk', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 glass border-b border-slate-700/50 px-4 py-3 shadow-lg">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full gold-gradient flex items-center justify-center font-bold text-slate-900 text-xl shadow-md">
+                    3D
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
+                    <p class="text-xs text-slate-400">တရားဝင် ဒိုင်တိုက်ရိုက်စနစ်</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleCartModal()" class="relative p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+                <button onclick="toggleHistoryModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
+                    <i data-lucide="history" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto p-4 space-y-6">
+
+        <!-- Live 2D Section -->
+        <section class="glass rounded-2xl p-4 border border-amber-500/20 relative overflow-hidden">
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <h2 class="text-sm font-bold text-slate-300">LIVE Thai 2D</h2>
+                </div>
+                <span id="liveTime" class="text-xs text-slate-400">--:--:-- PM</span>
+            </div>
+
+            <div class="text-center py-2">
+                <div id="live2D" class="text-6xl font-extrabold text-amber-400 tracking-wider my-1 drop-shadow-md">--</div>
+                <p class="text-xs text-slate-400">မနက်/ညနေ တိုက်ရိုက်ထွက်ဂဏန်း</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-700/50 text-xs">
+                <div class="bg-slate-800/60 p-2 rounded-xl text-center">
+                    <span class="text-slate-400 block">SET Index</span>
+                    <span id="setIndex" class="font-bold text-slate-200">----.--</span>
+                </div>
+                <div class="bg-slate-800/60 p-2 rounded-xl text-center">
+                    <span class="text-slate-400 block">Value</span>
+                    <span id="setValue" class="font-bold text-slate-200">----M</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mode Toggle Tabs (2D / 3D) -->
+        <div class="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+            <button id="btn2D" onclick="switchMode('2D')" class="flex-1 py-2 rounded-lg font-bold text-sm transition-all gold-gradient text-slate-950 shadow-md">
+                2D ထိုးမည်
+            </button>
+            <button id="btn3D" onclick="switchMode('3D')" class="flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-200 transition-all">
+                3D ထိုးမည်
+            </button>
+        </div>
+
+        <!-- Betting Form Section -->
+        <section class="glass rounded-2xl p-4 border border-slate-700/50 space-y-4">
+            
+            <!-- Number Input Area -->
+            <div>
+                <label class="block text-xs text-slate-400 mb-1">ဂဏန်း ရွေးချယ်ပါ</label>
+                <div class="flex space-x-2">
+                    <input type="text" id="numInput" maxlength="2" placeholder="00 - 99" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-2xl font-bold text-amber-400 tracking-widest focus:outline-none focus:border-amber-500">
+                    <button onclick="toggleR()" id="rBtn" class="px-4 bg-slate-800 text-slate-300 font-bold rounded-xl border border-slate-700 text-sm hover:border-amber-500">
+                        R ပါ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Amount Input Area -->
+            <div>
+                <label class="block text-xs text-slate-400 mb-1">ထိုးကြေး ပမာဏ (ကျပ်)</label>
+                <input type="number" id="amountInput" step="100" placeholder="အနည်းဆုံး ၁၀၀ ကျပ်" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-200 focus:outline-none focus:border-amber-500">
+            </div>
+
+            <!-- Quick Amount Badges -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="setQuickAmount(500)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၅၀၀</button>
+                <button onclick="setQuickAmount(1000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၁,၀၀၀</button>
+                <button onclick="setQuickAmount(5000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၅,၀၀၀</button>
+                <button onclick="setQuickAmount(10000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၁၀,၀၀၀</button>
+            </div>
+
+            <!-- Add to Order Button -->
+            <button onclick="addToCart()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm flex items-center justify-center space-x-2">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>စာရင်းထဲ ထည့်မည်</span>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-slate-200 text-lg flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-amber-400"></i>
+                    ရွေးချယ်ထားသော စာရင်း
+                </h3>
+                <button onclick="toggleCartModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Items List -->
+            <div id="cartList" class="flex-1 overflow-y-auto space-y-2 py-2">
+                <!-- Dynamic Items -->
+            </div>
+
+            <!-- Total & Checkout -->
+            <div class="border-t border-slate-800 pt-3 space-y-3">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">စုစုပေါင်း ပမာဏ</span>
+                    <span id="cartTotal" class="font-bold text-amber-400 text-lg">0 Ks</span>
+                </div>
+                
+                <!-- Payment Method Select -->
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">ငွေချေမှု နည်းလမ်း ရွေးပါ</label>
+                    <select id="paymentMethod" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
+                        <option value="KBZPay">KBZPay (09-123456789)</option>
+                        <option value="WaveMoney">WaveMoney (09-123456789)</option>
+                    </select>
+                </div>
+
+                <button onclick="submitOrder()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm">
+                    ထိုးမည် (အတည်ပြုမည်)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-slate-200 text-lg flex items-center gap-2">
+                    <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
+                    ထိုးခဲ့သော စာရင်းများ
+                </h3>
+                <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div id="historyList" class="flex-1 overflow-y-auto space-y-3 py-2">
+                <!-- Dynamic History -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let currentMode = '2D';
+        let isR = false;
+        let cart = [];
+        let history = JSON.parse(localStorage.getItem('2d3d_history') || '[]');
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Mode Switch
+        function switchMode(mode) {
+            currentMode = mode;
+            const btn2D = document.getElementById('btn2D');
+            const btn3D = document.getElementById('btn3D');
+            const numInput = document.getElementById('numInput');
+            const rBtn = document.getElementById('rBtn');
+
+            if(mode === '2D') {
+                btn2D.className = "flex-1 py-2 rounded-lg font-bold text-sm transition-all gold-gradient text-slate-950 shadow-md";
+                btn3D.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-200 transition-all";
+                numInput.maxLength = 2;
+                numInput.placeholder = "00 - 99";
+                rBtn.style.display = "block";
+            } else {
+                btn3D.className = "flex-1 py-2 rounded-lg font-bold text-sm transition-all gold-gradient text-slate-950 shadow-md";
+                btn2D.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-200 transition-all";
+                numInput.maxLength = 3;
+                numInput.placeholder = "000 - 999";
+                rBtn.style.display = "none";
+                isR = false;
+                rBtn.classList.remove('border-amber-500', 'text-amber-400');
+            }
+            numInput.value = '';
+        }
+
+        function toggleR() {
+            if(currentMode !== '2D') return;
+            isR = !isR;
+            const rBtn = document.getElementById('rBtn');
+            if(isR) {
+                rBtn.classList.add('border-amber-500', 'text-amber-400');
+            } else {
+                rBtn.classList.remove('border-amber-500', 'text-amber-400');
+            }
+        }
+
+        function setQuickAmount(amt) {
+            const amountInput = document.getElementById('amountInput');
+            const current = parseInt(amountInput.value) || 0;
+            amountInput.value = current + amt;
+        }
+
+        // Add to Cart
+        function addToCart() {
+            const numInput = document.getElementById('numInput');
+            const amountInput = document.getElementById('amountInput');
+            const num = numInput.value.trim();
+            const amt = parseInt(amountInput.value);
+
+            if(!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) {
+                alert('ကျေးဇူးပြု၍ ဂဏန်း မှန်ကန်စွာ ထည့်ပါ');
+                return;
+            }
+            if(!amt || amt < 100) {
+                alert('အနည်းဆုံး ထိုးကြေး ၁၀၀ ကျပ် ဖြစ်ရပါမည်');
+                return;
+            }
+
+            if(isR && currentMode === '2D' && num[0] !== num[1]) {
+                const reversed = num.split('').reverse().join('');
+                cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
+                cart.push({ id: Date.now() + 1, mode: currentMode, number: reversed, amount: amt });
+            } else {
+                cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
+            }
+
+            numInput.value = '';
+            amountInput.value = '';
+            isR = false;
+            document.getElementById('rBtn').classList.remove('border-amber-500', 'text-amber-400');
+            
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cartCount');
+            const listEl = document.getElementById('cartList');
+            const totalEl = document.getElementById('cartTotal');
+
+            if(cart.length > 0) {
+                countEl.innerText = cart.length;
+                countEl.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+            }
+
+            let total = 0;
+            listEl.innerHTML = cart.map((item, index) => {
+                total += item.amount;
+                return `
+                    <div class="flex justify-between items-center bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                        <div>
+                            <span class="font-bold text-amber-400 text-lg mr-2">[${item.mode}] ${item.number}</span>
+                            <span class="text-slate-300 text-sm">${item.amount.toLocaleString()} Ks</span>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-rose-400 hover:text-rose-300 p-1">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.innerText = total.toLocaleString() + ' Ks';
+            lucide.createIcons();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cartModal').classList.toggle('hidden');
+        }
+
+        function toggleHistoryModal() {
+            document.getElementById('historyModal').classList.toggle('hidden');
+            renderHistory();
+        }
+
+        function submitOrder() {
+            if(cart.length === 0) {
+                alert('စာရင်းထဲတွင် ဂဏန်းများ မရှိသေးပါ');
+                return;
+            }
+
+            const method = document.getElementById('paymentMethod').value;
+            const total = cart.reduce((sum, item) => sum + item.amount, 0);
+
+            const newOrder = {
+                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                date: new Date().toLocaleString('en-US', { hour12: true }),
+                items: [...cart],
+                total: total,
+                payment: method,
+                status: 'Pending'
+            };
+
+            history.unshift(newOrder);
+            localStorage.setItem('2d3d_history', JSON.stringify(history));
+
+            cart = [];
+            updateCartUI();
+            toggleCartModal();
+            alert('ထိုးဂဏန်း စာရင်း တင်ပြီးပါပြီ! ကျေးဇူးတင်ပါသည်။');
+        }
+
+        function renderHistory() {
+            const historyEl = document.getElementById('historyList');
+            if(history.length === 0) {
+                historyEl.innerHTML = `<p class="text-center text-slate-500 py-6 text-sm">ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ</p>`;
+                return;
+            }
+
+            historyEl.innerHTML = history.map(order => `
+                <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/80 space-y-2">
+                    <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/50 pb-2">
+                        <span>${order.id} (${order.date})</span>
+                        <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold">${order.status}</span>
+                    </div>
+                    <div class="space-y-1">
+                        ${order.items.map(i => `
+                            <div class="flex justify-between text-xs">
+                                <span class="text-slate-200 font-bold">[${i.mode}]${i.number}</span>
+                                <span class="text-slate-400">${i.amount.toLocaleString()} Ks</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="border-t border-slate-700/50 pt-2 flex justify-between items-center text-xs">
+                        <span class="text-slate-400">Payment: ${order.payment}</span>
+                        <span class="font-bold text-amber-400 text-sm">${order.total.toLocaleString()} Ks</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Live 2D Mock Fetch
+        function updateLive2D() {
+            const now = new Date();
+            document.getElementById('liveTime').innerText = now.toLocaleTimeString();
+            
+            // Simulation
+            document.getElementById('live2D').innerText = Math.floor(Math.random() * 90 + 10);
+            document.getElementById('setIndex').innerText = (1300 + Math.random() * 50).toFixed(2);
+            document.getElementById('setValue').innerText = (40000 + Math.random() * 10000).toFixed(0) + 'M';
+        }
+
+        setInterval(updateLive2D, 3000);
+        updateLive2D();
+    </script>
+</body>
+</html>
