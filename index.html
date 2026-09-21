@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D & 3D Website</title>
+    <title>2D & 3D Online Store - Nay Oake</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,10 +21,10 @@
     <header class="sticky top-0 z-40 glass border-b border-slate-700/50 px-4 py-3 shadow-lg">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">2D</div>
+                <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">N</div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Website</h1>
-                    <p class="text-xs text-slate-400">တရားဝင် ဒိုင်တိုက်ရိုက်စနစ်</p>
+                    <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
+                    <p class="text-xs text-slate-400">တရားဝင် ဒိုင်တိုက်ရိုက်စနစ် (Nay Oake)</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -42,26 +42,24 @@
     <!-- Main Section -->
     <main class="max-w-4xl mx-auto p-4 grid grid-cols-1 md:grid-cols-12 gap-4">
 
-        <!-- Left: Betting & Live Area -->
+        <!-- Left: Betting Area -->
         <div class="md:col-span-7 space-y-4">
-            
-            <!-- Real-time Live Results & Closing Status -->
             <section class="glass rounded-2xl p-4 border border-amber-500/20 relative overflow-hidden">
                 <div class="flex justify-between items-center mb-2">
                     <div class="flex items-center space-x-2">
-                        <span id="liveStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                        <h2 id="marketStatusText" class="text-sm font-bold text-slate-300">ဒိုင်ဖွင့်လှစ်ထားပါသည်</h2>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        <h2 class="text-sm font-bold text-slate-300">ယနေ့ထွက်ဂဏန်း (Live)</h2>
                     </div>
                     <span id="todayDateStr" class="text-xs text-amber-400 font-bold"></span>
                 </div>
-                
-                <!-- Realtime Live 2D Number -->
-                <div class="text-center my-3 bg-slate-900/60 p-3 rounded-xl border border-slate-700">
-                    <span class="text-xs text-slate-400 block">ယနေ့ထွက်ဂဏန်း (Real-time Live)</span>
-                    <span id="live2D" class="text-5xl font-extrabold text-amber-400 tracking-wider">--</span>
-                    <div class="flex justify-center gap-4 text-xs text-slate-300 mt-2">
-                        <span>SET: <b id="setIndex" class="text-emerald-400">--</b></span>
-                        <span>VALUE: <b id="setValue" class="text-emerald-400">--</b></span>
+                <div class="grid grid-cols-2 gap-3 my-2 text-center">
+                    <div class="bg-slate-800/90 p-3 rounded-xl border border-slate-700">
+                        <span class="text-xs text-slate-400 block mb-1">12:01 PM (မနက်)</span>
+                        <span id="todayAM" class="text-4xl font-extrabold text-amber-400 tracking-wider">--</span>
+                    </div>
+                    <div class="bg-slate-800/90 p-3 rounded-xl border border-slate-700">
+                        <span class="text-xs text-slate-400 block mb-1">04:30 PM (ညနေ)</span>
+                        <span id="todayPM" class="text-4xl font-extrabold text-amber-400 tracking-wider">--</span>
                     </div>
                 </div>
             </section>
@@ -91,14 +89,14 @@
                     <button onclick="setQuickAmount(5000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၅,၀၀၀</button>
                     <button onclick="setQuickAmount(10000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၁၀,၀၀၀</button>
                 </div>
-                <button id="addCartBtn" onclick="addToCart()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm flex items-center justify-center space-x-2">
+                <button onclick="addToCart()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm flex items-center justify-center space-x-2">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>စာရင်းထဲ ထည့်မည်</span>
                 </button>
             </section>
         </div>
 
-        <!-- Right: Badges, Calendar & Support Links -->
+        <!-- Right: Badges and Rates -->
         <div class="md:col-span-5 space-y-4">
             <section class="grid grid-cols-3 gap-2 text-center text-xs">
                 <div class="bg-slate-800/80 p-3 rounded-xl border border-amber-500/30 flex flex-col items-center justify-center space-y-1">
@@ -114,19 +112,6 @@
                     <span class="font-bold text-slate-200">တရားဝင်ဒိုင်</span>
                 </div>
             </section>
-
-            <!-- Calendar Section (ပြက္ခဒိန်) -->
-            <section class="glass rounded-2xl p-4 border border-slate-700/50 space-y-2">
-                <h4 class="text-xs text-amber-400 font-bold flex items-center gap-1">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                    ရက်စွဲအလိုက် ထွက်ဂဏန်းကြည့်ရန်
-                </h4>
-                <input type="date" id="calendarPicker" onchange="checkHistoryDate(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                <div id="calendarResult" class="text-xs text-slate-400 pt-1">
-                    ရက်စွဲ ရွေးချယ်ပေးပါ။
-                </div>
-            </section>
-
             <section class="glass rounded-2xl p-4 border border-amber-500/30 flex justify-around items-center text-center">
                 <div>
                     <span class="text-xs text-slate-400 block">2D အလျော်နှုန်း</span>
@@ -138,29 +123,10 @@
                     <span class="text-2xl font-bold text-amber-400">၅၀၀ ဆ</span>
                 </div>
             </section>
-
-            <!-- Customer Support (Viber & Telegram Buttons) -->
-            <section class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 text-center space-y-3">
-                <h4 class="text-xs text-slate-300 font-bold">Customer Support (ဆက်သွယ်ရန်)</h4>
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="viber://chat?number=%2B959400091765" target="_blank" class="flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow">
-                        <i class="fa-brands fa-viber text-sm"></i>
-                        <span>Viber</span>
-                    </a>
-                    <a href="https://t.me/+959400091765" target="_blank" class="flex items-center justify-center space-x-2 bg-sky-500 hover:bg-sky-400 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow">
-                        <i class="fa-brands fa-telegram text-sm"></i>
-                        <span>Telegram</span>
-                    </a>
-                </div>
-                <a href="tel:09400091765" class="flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition-all shadow w-full">
-                    <i data-lucide="phone" class="w-3.5 h-3.5"></i>
-                    <span>09400081765 သို့ ခေါ်ဆိုရန်</span>
-                </a>
-            </section>
         </div>
     </main>
 
-    <!-- Cart Modal (ငွေပေးချေမှုစနစ်) -->
+    <!-- Cart Modal -->
     <div id="cartModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
         <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -179,8 +145,8 @@
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">ငွေချေမှု နည်းလမ်း ရွေးပါ</label>
                     <select id="paymentMethod" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
-                        <option value="KBZPay">KBZPay - 09400081765</option>
-                        <option value="WaveMoney">WaveMoney - 09400081765</option>
+                        <option value="KBZPay">KBZPay - 09400081765 (Nay Oake)</option>
+                        <option value="WaveMoney">WaveMoney - 09400081765 (Nay Oake)</option>
                     </select>
                 </div>
                 <button onclick="submitOrder()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm">
@@ -204,78 +170,19 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript logic -->
     <script>
-        // -----------------------------------------------------------
-        // 1. Telegram Bot Credentials
-        // -----------------------------------------------------------
-        const TELEGRAM_BOT_TOKEN = "8909660846:AAEJVvJZI6Gbx7LigkCUO3CoK7JwUGN6Rnk"; // BotFather မှ ရထားသော Token အသစ်ထည့်ပါ
-        const TELEGRAM_CHAT_ID = "-5551204060"; // အစ်ကို့ Chat ID
-        const ADMIN_PASSCODE = "331249";
-
-        const BLOCKED_NUMBERS = ["00", "88", "99"]; // ပိတ်ဂဏန်းများ
-
         let currentMode = '2D';
         let isR = false;
         let cart = [];
         let history = JSON.parse(localStorage.getItem('2d3d_history') || '[]');
+        const ADMIN_PASSCODE = "331249"; // အစ်ကို သတ်မှတ်ထားသော Passcode
 
         window.onload = function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('todayDateStr').innerText = today;
-            document.getElementById('calendarPicker').value = today;
-            checkMarketTime();
-            setInterval(checkMarketTime, 10000);
-            fetchLive2D();
-            setInterval(fetchLive2D, 3000);
             lucide.createIcons();
         };
-
-        // Realtime 2D Live Fetch
-        async function fetchLive2D() {
-            try {
-                const res = await fetch('https://live-2d-api.kyaung.workers.dev/api/live');
-                const data = await res.json();
-                document.getElementById('live2D').innerText = data.live || '--';
-                document.getElementById('setIndex').innerText = data.set || '--';
-                document.getElementById('setValue').innerText = data.val || '--';
-            } catch (err) {
-                console.error("Live fetch error", err);
-            }
-        }
-
-        // ဒိုင်ပိတ်ချိန် စစ်ဆေးခြင်း (11:39 AM & 3:59 PM)
-        function checkMarketTime() {
-            const now = new Date();
-            const currentTimeStr = now.getHours() * 60 + now.getMinutes();
-
-            const amCloseTime = 11 * 60 + 39; 
-            const amOpenTime = 12 * 60 + 1;   
-            const pmCloseTime = 15 * 60 + 59; 
-
-            const addCartBtn = document.getElementById('addCartBtn');
-            const marketStatusText = document.getElementById('marketStatusText');
-            const liveStatusDot = document.getElementById('liveStatusDot');
-
-            if ((currentTimeStr >= amCloseTime && currentTimeStr < amOpenTime) || (currentTimeStr >= pmCloseTime)) {
-                addCartBtn.disabled = true;
-                addCartBtn.className = "w-full bg-slate-800 text-slate-500 font-bold py-3 rounded-xl border border-slate-700 cursor-not-allowed text-sm flex items-center justify-center space-x-2";
-                addCartBtn.innerHTML = `<span>ထိုးကြေး ပိတ်ပါပြီ</span>`;
-                marketStatusText.innerText = "ဒိုင်ပိတ်ချိန် ရောက်ရှိနေပါသည်";
-                marketStatusText.className = "text-sm font-bold text-rose-400";
-                liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
-                return false;
-            } else {
-                addCartBtn.disabled = false;
-                addCartBtn.className = "w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm flex items-center justify-center space-x-2";
-                addCartBtn.innerHTML = `<i data-lucide="plus" class="w-4 h-4"></i><span>စာရင်းထဲ ထည့်မည်</span>`;
-                marketStatusText.innerText = "ဒိုင်ဖွင့်လှစ်ထားပါသည်";
-                marketStatusText.className = "text-sm font-bold text-emerald-400";
-                liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping";
-                lucide.createIcons();
-                return true;
-            }
-        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -312,37 +219,17 @@
         }
 
         function addToCart() {
-            if(!checkMarketTime()) {
-                alert("ဒိုင်ပိတ်ချိန် ရောက်ရှိနေပါသဖြင့် ထိုး၍မရနိုင်တော့ပါ။");
-                return;
-            }
-
             const num = document.getElementById('numInput').value.trim();
             const amt = parseInt(document.getElementById('amountInput').value);
 
             if(!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) {
-                alert("ဂဏန်း မှန်ကန်စွာ ရိုက်ထည့်ပါ");
                 return;
             }
-
-            if(BLOCKED_NUMBERS.includes(num)) {
-                alert(`ဂဏန်း [${num}] သည် ပိတ်ဂဏန်း ဖြစ်ပါသဖြင့် ထိုး၍ မရပါခင်ဗျာ။`);
-                return;
-            }
-
             if(!amt || amt < 100) {
-                alert("အနည်းဆုံး ၁၀၀ ကျပ် ထိုးရပါမည်");
                 return;
             }
 
-            if(isR && currentMode === '2D' && num[0] !== num[1]) {
-                const rNum = num.split('').reverse().join('');
-                cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
-                cart.push({ id: Date.now() + 1, mode: currentMode, number: rNum, amount: amt });
-            } else {
-                cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
-            }
-
+            cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
             document.getElementById('numInput').value = '';
             document.getElementById('amountInput').value = '';
             updateCartUI();
@@ -389,12 +276,17 @@
             renderHistory();
         }
 
-        // ငွေလွှဲစနစ် လင့်ခ်ချိတ်ဆက်မှု
         function submitOrder() {
             if(cart.length === 0) return;
 
             const method = document.getElementById('paymentMethod').value;
             const total = cart.reduce((sum, item) => sum + item.amount, 0);
+            const phoneNo = "09400081765";
+
+            // Clipboard Auto-Copy
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(phoneNo);
+            }
 
             const newOrder = {
                 id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
@@ -408,13 +300,11 @@
             history.unshift(newOrder);
             localStorage.setItem('2d3d_history', JSON.stringify(history));
 
-            sendToTelegram(newOrder);
-
             cart = [];
             updateCartUI();
             toggleCartModal();
 
-            // KBZPay / WavePay App သို့ တိုက်ရိုက် သွားရောက်စေခြင်း
+            // Alert မပြတော့ဘဲ KBZPay တိုက်ရိုက်ပွင့်မည်
             setTimeout(() => {
                 if(method.includes('KBZPay')) {
                     window.location.href = "kbzpay://";
@@ -424,34 +314,7 @@
             }, 300);
         }
 
-        function sendToTelegram(order) {
-            if(!TELEGRAM_BOT_TOKEN) return;
-
-            let itemsText = order.items.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
-            
-            let message = `🚨 <b>ထိုးကြေး စာရင်းအသစ် ဝင်လာပါသည်!</b>\n\n` +
-                          `<b>Order ID:</b> <code>${order.id}</code>\n` +
-                          `<b>အချိန်:</b> ${order.date}\n\n` +
-                          `<b>ထိုးထားသော ဂဏန်းများ:</b>\n${itemsText}\n\n` +
-                          `<b>စုစုပေါင်း:</b> <b>${order.total.toLocaleString()} Ks</b>\n` +
-                          `<b>ငွေချေစနစ်:</b> ${order.payment}\n` +
-                          `<b>အခြေအနေ:</b> ⏳ Pending (ငွေစစ်ရန်)`;
-
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
-            }).catch(err => console.error("Telegram Error:", err));
-        }
-
-        function checkHistoryDate(selectedDate) {
-            document.getElementById('calendarResult').innerHTML = `<span class="text-amber-400 font-bold">${selectedDate}</span> နေ့အတွက် စာရင်းများကို ရှာဖွေနေပါသည်...`;
-        }
-
+        // Admin မှ Passcode ရိုက်၍ Approve ပေးသည့် စနစ်
         function adminApproveOrder(orderId) {
             const inputCode = prompt("Admin Passcode ရိုက်ထည့်ပါ:");
             if(inputCode === ADMIN_PASSCODE) {
