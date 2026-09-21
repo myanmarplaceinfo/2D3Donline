@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D & 3D Online Official Store</title>
+    <title>2D & 3D Online Official Store - Nay Oake</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -25,6 +25,9 @@
         .gold-gradient {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
+        .blue-gradient {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        }
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -33,12 +36,13 @@
     <header class="sticky top-0 z-40 glass border-b border-slate-700/50 px-4 py-3 shadow-lg">
         <div class="max-w-md mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-full gold-gradient flex items-center justify-center font-bold text-slate-900 text-xl shadow-md">
-                    3D
+                <!-- Light Blue Logo with N -->
+                <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">
+                    N
                 </div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
-                    <p class="text-xs text-slate-400">တရားဝင် ဒိုင်တိုက်ရိုက်စနစ်</p>
+                    <p class="text-xs text-slate-400">တရားဝင် ဒိုင်တိုက်ရိုက်စနစ် (Nay Oake)</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -60,36 +64,59 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-md mx-auto p-4 space-y-6">
+    <main class="max-w-md mx-auto p-4 space-y-4">
 
-        <!-- Live 2D Section -->
+        <!-- Trust Badges Section -->
+        <section class="grid grid-cols-3 gap-2 text-center text-xs">
+            <div class="bg-slate-800/80 p-2 rounded-xl border border-amber-500/30 flex flex-col items-center justify-center space-y-1">
+                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+                <span class="font-bold text-slate-200">၁၀၀% အာမခံ</span>
+            </div>
+            <div class="bg-slate-800/80 p-2 rounded-xl border border-amber-500/30 flex flex-col items-center justify-center space-y-1">
+                <i data-lucide="zap" class="w-5 h-5 text-amber-400"></i>
+                <span class="font-bold text-slate-200">၂၄ နာရီ ငွေထုတ်</span>
+            </div>
+            <div class="bg-slate-800/80 p-2 rounded-xl border border-amber-500/30 flex flex-col items-center justify-center space-y-1">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-sky-400"></i>
+                <span class="font-bold text-slate-200">တရားဝင်ဒိုင်</span>
+            </div>
+        </section>
+
+        <!-- Payout Rate Card -->
+        <section class="glass rounded-2xl p-3 border border-amber-500/30 flex justify-around items-center text-center">
+            <div>
+                <span class="text-xs text-slate-400 block">2D အလျော်နှုန်း</span>
+                <span class="text-lg font-bold text-amber-400">၈၀ ဆ</span>
+            </div>
+            <div class="h-8 w-px bg-slate-700"></div>
+            <div>
+                <span class="text-xs text-slate-400 block">3D အလျော်နှုန်း</span>
+                <span class="text-lg font-bold text-amber-400">၅၀၀ ဆ</span>
+            </div>
+        </section>
+
+        <!-- Live 2D Section (Today's Result) -->
         <section class="glass rounded-2xl p-4 border border-amber-500/20 relative overflow-hidden">
-            <div class="flex justify-between items-center mb-3">
+            <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center space-x-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                    <h2 class="text-sm font-bold text-slate-300">LIVE Thai 2D</h2>
+                    <h2 class="text-sm font-bold text-slate-300">ယနေ့ထွက်ဂဏန်း (September 21, 2026)</h2>
                 </div>
-                <span id="liveTime" class="text-xs text-slate-400">--:--:-- PM</span>
             </div>
 
-            <div class="text-center py-2">
-                <div id="live2D" class="text-6xl font-extrabold text-amber-400 tracking-wider my-1 drop-shadow-md">--</div>
-                <p class="text-xs text-slate-400">မနက်/ညနေ တိုက်ရိုက်ထွက်ဂဏန်း</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-700/50 text-xs">
-                <div class="bg-slate-800/60 p-2 rounded-xl text-center">
-                    <span class="text-slate-400 block">SET Index</span>
-                    <span id="setIndex" class="font-bold text-slate-200">----.--</span>
+            <div class="grid grid-cols-2 gap-3 my-2 text-center">
+                <div class="bg-slate-800/90 p-3 rounded-xl border border-slate-700">
+                    <span class="text-xs text-slate-400 block mb-1">12:01 PM (မနက်)</span>
+                    <span class="text-4xl font-extrabold text-amber-400 tracking-wider">01</span>
                 </div>
-                <div class="bg-slate-800/60 p-2 rounded-xl text-center">
-                    <span class="text-slate-400 block">Value</span>
-                    <span id="setValue" class="font-bold text-slate-200">----M</span>
+                <div class="bg-slate-800/90 p-3 rounded-xl border border-slate-700">
+                    <span class="text-xs text-slate-400 block mb-1">04:30 PM (ညနေ)</span>
+                    <span class="text-4xl font-extrabold text-amber-400 tracking-wider">34</span>
                 </div>
             </div>
         </section>
 
-        <!-- Mode Toggle Tabs (2D / 3D) -->
+        <!-- Mode Switch Tabs -->
         <div class="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700">
             <button id="btn2D" onclick="switchMode('2D')" class="flex-1 py-2 rounded-lg font-bold text-sm transition-all gold-gradient text-slate-950 shadow-md">
                 2D ထိုးမည်
@@ -99,10 +126,8 @@
             </button>
         </div>
 
-        <!-- Betting Form Section -->
+        <!-- Betting Form -->
         <section class="glass rounded-2xl p-4 border border-slate-700/50 space-y-4">
-            
-            <!-- Number Input Area -->
             <div>
                 <label class="block text-xs text-slate-400 mb-1">ဂဏန်း ရွေးချယ်ပါ</label>
                 <div class="flex space-x-2">
@@ -113,13 +138,12 @@
                 </div>
             </div>
 
-            <!-- Amount Input Area -->
             <div>
                 <label class="block text-xs text-slate-400 mb-1">ထိုးကြေး ပမာဏ (ကျပ်)</label>
                 <input type="number" id="amountInput" step="100" placeholder="အနည်းဆုံး ၁၀၀ ကျပ်" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-200 focus:outline-none focus:border-amber-500">
             </div>
 
-            <!-- Quick Amount Badges -->
+            <!-- Quick Amounts -->
             <div class="flex flex-wrap gap-2">
                 <button onclick="setQuickAmount(500)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၅၀၀</button>
                 <button onclick="setQuickAmount(1000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၁,၀၀၀</button>
@@ -127,11 +151,25 @@
                 <button onclick="setQuickAmount(10000)" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1.5 rounded-lg">+၁၀,၀၀၀</button>
             </div>
 
-            <!-- Add to Order Button -->
             <button onclick="addToCart()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm flex items-center justify-center space-x-2">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>စာရင်းထဲ ထည့်မည်</span>
             </button>
+        </section>
+
+        <!-- Direct Contact Buttons -->
+        <section class="glass rounded-2xl p-4 border border-slate-700/50 space-y-2 text-center">
+            <p class="text-xs text-slate-400">တိုက်ရိုက် ဆက်သွယ် မေးမြန်းရန်</p>
+            <div class="grid grid-cols-2 gap-2">
+                <a href="viber://chat?number=%2B959400081765" class="bg-purple-600/80 hover:bg-purple-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 border border-purple-500">
+                    <i class="fa-brands fa-viber text-base"></i>
+                    <span>Viber Contact</span>
+                </a>
+                <a href="https://t.me/09400081765" target="_blank" class="bg-sky-600/80 hover:bg-sky-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 border border-sky-500">
+                    <i class="fa-brands fa-telegram text-base"></i>
+                    <span>Telegram Chat</span>
+                </a>
+            </div>
         </section>
 
     </main>
@@ -149,24 +187,19 @@
                 </button>
             </div>
 
-            <!-- Items List -->
-            <div id="cartList" class="flex-1 overflow-y-auto space-y-2 py-2">
-                <!-- Dynamic Items -->
-            </div>
+            <div id="cartList" class="flex-1 overflow-y-auto space-y-2 py-2"></div>
 
-            <!-- Total & Checkout -->
             <div class="border-t border-slate-800 pt-3 space-y-3">
                 <div class="flex justify-between text-sm">
                     <span class="text-slate-400">စုစုပေါင်း ပမာဏ</span>
                     <span id="cartTotal" class="font-bold text-amber-400 text-lg">0 Ks</span>
                 </div>
                 
-                <!-- Payment Method Select (Updated with Name Nay Oake) -->
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">ငွေချေမှု နည်းလမ်း ရွေးပါ</label>
                     <select id="paymentMethod" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
-                        <option value="KBZPay">KBZPay - 09xxxxxxxxx (Nay Oake)</option>
-                        <option value="WaveMoney">WaveMoney - 09xxxxxxxxx (Nay Oake)</option>
+                        <option value="KBZPay">KBZPay - 09400081765 (Nay Oake)</option>
+                        <option value="WaveMoney">WaveMoney - 09400081765 (Nay Oake)</option>
                     </select>
                 </div>
 
@@ -190,9 +223,7 @@
                 </button>
             </div>
 
-            <div id="historyList" class="flex-1 overflow-y-auto space-y-3 py-2">
-                <!-- Dynamic History -->
-            </div>
+            <div id="historyList" class="flex-1 overflow-y-auto space-y-3 py-2"></div>
         </div>
     </div>
 
@@ -202,22 +233,20 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <h3 class="font-bold text-slate-200 text-base flex items-center gap-2">
                     <i data-lucide="calendar" class="w-5 h-5 text-amber-400"></i>
-                    2D / 3D ထွက်ဂဏန်း ပြက္ခဒိန်
+                    2D ထွက်ဂဏန်း ပြက္ခဒိန် (September 2026)
                 </h3>
                 <button onclick="toggleCalendarModal()" class="text-slate-400 hover:text-white">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <!-- Date Selector -->
             <div>
                 <label class="block text-xs text-slate-400 mb-1">ရက်စွဲ ရွေးချယ်ပါ</label>
-                <input type="date" id="calendarPicker" onchange="fetchResultByDate(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-amber-400 font-bold focus:outline-none">
+                <input type="date" id="calendarPicker" value="2026-09-21" onchange="fetchResultByDate(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-amber-400 font-bold focus:outline-none">
             </div>
 
-            <!-- Result Card for Selected Date -->
             <div id="calendarResultCard" class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 text-center space-y-3">
-                <p class="text-xs text-slate-400">ရက်စွဲ ရွေးချယ်ပြီး ထွက်ဂဏန်းများကို စစ်ဆေးပါ</p>
+                <!-- Selected Date Output -->
             </div>
         </div>
     </div>
@@ -229,10 +258,27 @@
         let cart = [];
         let history = JSON.parse(localStorage.getItem('2d3d_history') || '[]');
 
-        // Initialize Icons
+        // September 2026 Actual 2D Results Data[cite: 4]
+        const realResults2D = {
+            "2026-09-01": { am: "87", pm: "83" },
+            "2026-09-02": { am: "17", pm: "77" },
+            "2026-09-03": { am: "71", pm: "23" },
+            "2026-09-04": { am: "26", pm: "81" },
+            "2026-09-07": { am: "59", pm: "22" },
+            "2026-09-08": { am: "38", pm: "98" },
+            "2026-09-09": { am: "96", pm: "90" },
+            "2026-09-10": { am: "75", pm: "78" },
+            "2026-09-11": { am: "69", pm: "23" },
+            "2026-09-14": { am: "82", pm: "79" },
+            "2026-09-15": { am: "13", pm: "68" },
+            "2026-09-16": { am: "57", pm: "31" },
+            "2026-09-17": { am: "04", pm: "41" },
+            "2026-09-18": { am: "98", pm: "57" },
+            "2026-09-21": { am: "01", pm: "34" }
+        };
+
         lucide.createIcons();
 
-        // Mode Switch
         function switchMode(mode) {
             currentMode = mode;
             const btn2D = document.getElementById('btn2D');
@@ -245,21 +291,20 @@
                 btn3D.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-200 transition-all";
                 numInput.maxLength = 2;
                 numInput.placeholder = "00 - 99";
-                rBtn.style.display = "block";
+                rBtn.innerText = "R ပါ";
             } else {
                 btn3D.className = "flex-1 py-2 rounded-lg font-bold text-sm transition-all gold-gradient text-slate-950 shadow-md";
                 btn2D.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-slate-200 transition-all";
                 numInput.maxLength = 3;
                 numInput.placeholder = "000 - 999";
-                rBtn.style.display = "none";
-                isR = false;
-                rBtn.classList.remove('border-amber-500', 'text-amber-400');
+                rBtn.innerText = "R (လှည့်)";
             }
             numInput.value = '';
+            isR = false;
+            rBtn.classList.remove('border-amber-500', 'text-amber-400');
         }
 
         function toggleR() {
-            if(currentMode !== '2D') return;
             isR = !isR;
             const rBtn = document.getElementById('rBtn');
             if(isR) {
@@ -275,7 +320,19 @@
             amountInput.value = current + amt;
         }
 
-        // Add to Cart
+        function get3DPermutations(str) {
+            if (str.length !== 3) return [str];
+            const arr = str.split('');
+            const results = new Set();
+            results.add(arr[0] + arr[1] + arr[2]);
+            results.add(arr[0] + arr[2] + arr[1]);
+            results.add(arr[1] + arr[0] + arr[2]);
+            results.add(arr[1] + arr[2] + arr[0]);
+            results.add(arr[2] + arr[0] + arr[1]);
+            results.add(arr[2] + arr[1] + arr[0]);
+            return Array.from(results);
+        }
+
         function addToCart() {
             const numInput = document.getElementById('numInput');
             const amountInput = document.getElementById('amountInput');
@@ -291,10 +348,21 @@
                 return;
             }
 
-            if(isR && currentMode === '2D' && num[0] !== num[1]) {
-                const reversed = num.split('').reverse().join('');
-                cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
-                cart.push({ id: Date.now() + 1, mode: currentMode, number: reversed, amount: amt });
+            if(isR) {
+                if(currentMode === '2D') {
+                    if(num[0] !== num[1]) {
+                        const reversed = num.split('').reverse().join('');
+                        cart.push({ id: Date.now(), mode: '2D', number: num, amount: amt });
+                        cart.push({ id: Date.now() + 1, mode: '2D', number: reversed, amount: amt });
+                    } else {
+                        cart.push({ id: Date.now(), mode: '2D', number: num, amount: amt });
+                    }
+                } else if(currentMode === '3D') {
+                    const permList = get3DPermutations(num);
+                    permList.forEach((pNum, index) => {
+                        cart.push({ id: Date.now() + index, mode: '3D', number: pNum, amount: amt });
+                    });
+                }
             } else {
                 cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
             }
@@ -303,7 +371,6 @@
             amountInput.value = '';
             isR = false;
             document.getElementById('rBtn').classList.remove('border-amber-500', 'text-amber-400');
-            
             updateCartUI();
         }
 
@@ -353,30 +420,26 @@
             renderHistory();
         }
 
-        // Calendar Functions
         function toggleCalendarModal() {
             document.getElementById('calendarModal').classList.toggle('hidden');
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('calendarPicker').value = today;
-            fetchResultByDate(today);
+            const picker = document.getElementById('calendarPicker');
+            fetchResultByDate(picker.value);
         }
 
         function fetchResultByDate(selectedDate) {
             const card = document.getElementById('calendarResultCard');
-            // Mock dynamic numbers based on date seed
-            const random1 = Math.floor(Math.random() * 90 + 10);
-            const random2 = Math.floor(Math.random() * 90 + 10);
+            const result = realResults2D[selectedDate] || { am: "--", pm: "--" };
             
             card.innerHTML = `
                 <div class="text-xs text-amber-400 font-bold mb-2">📅 ${selectedDate} ထွက်ဂဏန်းများ</div>
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
                         <span class="text-slate-400 block mb-1">12:01 PM (မနက်)</span>
-                        <span class="text-2xl font-bold text-emerald-400">${random1}</span>
+                        <span class="text-2xl font-bold text-emerald-400">${result.am}</span>
                     </div>
                     <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
                         <span class="text-slate-400 block mb-1">04:30 PM (ညနေ)</span>
-                        <span class="text-2xl font-bold text-emerald-400">${random2}</span>
+                        <span class="text-2xl font-bold text-emerald-400">${result.pm}</span>
                     </div>
                 </div>
             `;
@@ -437,19 +500,6 @@
                 </div>
             `).join('');
         }
-
-        // Live 2D Simulation
-        function updateLive2D() {
-            const now = new Date();
-            document.getElementById('liveTime').innerText = now.toLocaleTimeString();
-            
-            document.getElementById('live2D').innerText = Math.floor(Math.random() * 90 + 10);
-            document.getElementById('setIndex').innerText = (1300 + Math.random() * 50).toFixed(2);
-            document.getElementById('setValue').innerText = (40000 + Math.random() * 10000).toFixed(0) + 'M';
-        }
-
-        setInterval(updateLive2D, 3000);
-        updateLive2D();
     </script>
 </body>
 </html>
