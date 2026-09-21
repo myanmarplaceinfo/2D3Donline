@@ -41,11 +41,17 @@
                     <p class="text-xs text-slate-400">တရားဝင် ဒိုင်တိုက်ရိုက်စနစ်</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2">
+                <!-- Calendar Button -->
+                <button onclick="toggleCalendarModal()" class="p-2 bg-slate-800 rounded-full text-amber-400 border border-slate-700 hover:border-amber-500">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                </button>
+                <!-- Cart Button -->
                 <button onclick="toggleCartModal()" class="relative p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
                     <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                     <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
+                <!-- History Button -->
                 <button onclick="toggleHistoryModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
                     <i data-lucide="history" class="w-5 h-5"></i>
                 </button>
@@ -155,12 +161,12 @@
                     <span id="cartTotal" class="font-bold text-amber-400 text-lg">0 Ks</span>
                 </div>
                 
-                <!-- Payment Method Select -->
+                <!-- Payment Method Select (Updated with Name Nay Oake) -->
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">ငွေချေမှု နည်းလမ်း ရွေးပါ</label>
                     <select id="paymentMethod" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
-                        <option value="KBZPay">KBZPay (09-123456789)</option>
-                        <option value="WaveMoney">WaveMoney (09-123456789)</option>
+                        <option value="KBZPay">KBZPay - 09xxxxxxxxx (Nay Oake)</option>
+                        <option value="WaveMoney">WaveMoney - 09xxxxxxxxx (Nay Oake)</option>
                     </select>
                 </div>
 
@@ -186,6 +192,32 @@
 
             <div id="historyList" class="flex-1 overflow-y-auto space-y-3 py-2">
                 <!-- Dynamic History -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Results Modal -->
+    <div id="calendarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl p-5 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-slate-200 text-base flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-5 h-5 text-amber-400"></i>
+                    2D / 3D ထွက်ဂဏန်း ပြက္ခဒိန်
+                </h3>
+                <button onclick="toggleCalendarModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Date Selector -->
+            <div>
+                <label class="block text-xs text-slate-400 mb-1">ရက်စွဲ ရွေးချယ်ပါ</label>
+                <input type="date" id="calendarPicker" onchange="fetchResultByDate(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-amber-400 font-bold focus:outline-none">
+            </div>
+
+            <!-- Result Card for Selected Date -->
+            <div id="calendarResultCard" class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 text-center space-y-3">
+                <p class="text-xs text-slate-400">ရက်စွဲ ရွေးချယ်ပြီး ထွက်ဂဏန်းများကို စစ်ဆေးပါ</p>
             </div>
         </div>
     </div>
@@ -321,6 +353,35 @@
             renderHistory();
         }
 
+        // Calendar Functions
+        function toggleCalendarModal() {
+            document.getElementById('calendarModal').classList.toggle('hidden');
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('calendarPicker').value = today;
+            fetchResultByDate(today);
+        }
+
+        function fetchResultByDate(selectedDate) {
+            const card = document.getElementById('calendarResultCard');
+            // Mock dynamic numbers based on date seed
+            const random1 = Math.floor(Math.random() * 90 + 10);
+            const random2 = Math.floor(Math.random() * 90 + 10);
+            
+            card.innerHTML = `
+                <div class="text-xs text-amber-400 font-bold mb-2">📅 ${selectedDate} ထွက်ဂဏန်းများ</div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                        <span class="text-slate-400 block mb-1">12:01 PM (မနက်)</span>
+                        <span class="text-2xl font-bold text-emerald-400">${random1}</span>
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                        <span class="text-slate-400 block mb-1">04:30 PM (ညနေ)</span>
+                        <span class="text-2xl font-bold text-emerald-400">${random2}</span>
+                    </div>
+                </div>
+            `;
+        }
+
         function submitOrder() {
             if(cart.length === 0) {
                 alert('စာရင်းထဲတွင် ဂဏန်းများ မရှိသေးပါ');
@@ -377,12 +438,11 @@
             `).join('');
         }
 
-        // Live 2D Mock Fetch
+        // Live 2D Simulation
         function updateLive2D() {
             const now = new Date();
             document.getElementById('liveTime').innerText = now.toLocaleTimeString();
             
-            // Simulation
             document.getElementById('live2D').innerText = Math.floor(Math.random() * 90 + 10);
             document.getElementById('setIndex').innerText = (1300 + Math.random() * 50).toFixed(2);
             document.getElementById('setValue').innerText = (40000 + Math.random() * 10000).toFixed(0) + 'M';
