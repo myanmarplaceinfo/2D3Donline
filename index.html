@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D&3D Website</title>
+    <title>2D & 3D Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -60,14 +60,19 @@
                     </div>
                     <span id="todayDateStr" class="text-xs text-amber-400 font-bold"></span>
                 </div>
-                <div class="grid grid-cols-2 gap-3 my-2 text-center">
-                    <div class="bg-slate-800/90 p-3 rounded-xl border border-slate-700">
-                        <span class="text-xs text-slate-400 block mb-1">12:01 PM (မနက်)</span>
-                        <span id="todayAM" class="text-4xl font-extrabold text-amber-400 tracking-wider">--</span>
+                <!-- 2D & 3D Live Results Display -->
+                <div class="grid grid-cols-3 gap-2 my-2 text-center">
+                    <div class="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <span class="text-[10px] text-slate-400 block mb-1">2D မနက် (12:01)</span>
+                        <span id="todayAM" class="text-2xl sm:text-3xl font-extrabold text-amber-400 tracking-wider">--</span>
                     </div>
-                    <div class="bg-slate-800/90 p-3 rounded-xl border border-slate-700">
-                        <span class="text-xs text-slate-400 block mb-1">04:30 PM (ညနေ)</span>
-                        <span id="todayPM" class="text-4xl font-extrabold text-amber-400 tracking-wider">--</span>
+                    <div class="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <span class="text-[10px] text-slate-400 block mb-1">2D ညနေ (04:30)</span>
+                        <span id="todayPM" class="text-2xl sm:text-3xl font-extrabold text-amber-400 tracking-wider">--</span>
+                    </div>
+                    <div class="bg-slate-800/90 p-2.5 rounded-xl border border-amber-500/30">
+                        <span class="text-[10px] text-amber-400 block mb-1 font-bold">3D ထွက်ဂဏန်း</span>
+                        <span id="today3D" class="text-2xl sm:text-3xl font-extrabold text-sky-400 tracking-wider">---</span>
                     </div>
                 </div>
             </section>
@@ -207,20 +212,24 @@
                 </div>
             </div>
 
-            <!-- Admin Live Result Update Panel (Admin Mode ဖွင့်ထားမှ ပေါ်မည်) -->
+            <!-- Admin Live Result Update Panel (2D & 3D ပါဝင်သည်) -->
             <div id="adminResultPanel" class="hidden bg-slate-800/90 p-3 rounded-xl border border-amber-500/30 space-y-2 text-xs">
                 <div class="font-bold text-amber-400 flex items-center gap-1">
                     <i data-lucide="edit-3" class="w-4 h-4"></i>
-                    [Admin] ယနေ့ထွက်ဂဏန်း ပြင်ဆင်ရန်
+                    [Admin] 2D / 3D ထွက်ဂဏန်း ပြင်ဆင်ရန်
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <label class="text-slate-400 block mb-1">12:01 PM (မနက်)</label>
+                        <label class="text-slate-400 block mb-1">2D မနက်</label>
                         <input type="text" id="adminAMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
                     </div>
                     <div>
-                        <label class="text-slate-400 block mb-1">04:30 PM (ညနေ)</label>
+                        <label class="text-slate-400 block mb-1">2D ညနေ</label>
                         <input type="text" id="adminPMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+                    </div>
+                    <div>
+                        <label class="text-amber-400 font-bold block mb-1">3D ထွက်ဂဏန်း</label>
+                        <input type="text" id="admin3DInput" maxlength="3" placeholder="000-999" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sky-400 font-bold">
                     </div>
                 </div>
                 <button onclick="updateLiveResults()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 rounded transition-all">
@@ -266,15 +275,18 @@
             document.getElementById('todayDateStr').innerText = today;
             lucide.createIcons();
 
-            // Firebase မှ Realtime ထွက်ဂဏန်းများကို စောင့်ကြည့်ခြင်း
+            // Firebase မှ Realtime 2D & 3D ထွက်ဂဏန်းများကို စောင့်ကြည့်ခြင်း
             db.ref('live_results').on('value', (snapshot) => {
                 const res = snapshot.val();
                 if (res) {
                     document.getElementById('todayAM').innerText = res.am || '--';
                     document.getElementById('todayPM').innerText = res.pm || '--';
+                    document.getElementById('today3D').innerText = res.threed || '---';
+
                     if (document.getElementById('adminAMInput')) {
                         document.getElementById('adminAMInput').value = res.am || '';
                         document.getElementById('adminPMInput').value = res.pm || '';
+                        document.getElementById('admin3DInput').value = res.threed || '';
                     }
                 }
             });
@@ -290,24 +302,7 @@
                 }
                 renderHistory();
             });
-
-            // အခမဲ့ API မှ 2D ဂဏန်း အလိုအလျောက် ရယူရန် စမ်းသပ်ခြင်း
-            fetchLiveAPI();
         };
-
-        async function fetchLiveAPI() {
-            try {
-                let res = await fetch('https://2dapi.com/api/live');
-                let data = await res.json();
-                if (data && data.live) {
-                    if (!document.getElementById('todayAM').innerText || document.getElementById('todayAM').innerText === '--') {
-                        document.getElementById('todayAM').innerText = data.live.twod || '--';
-                    }
-                }
-            } catch (e) {
-                console.log("API Fetch error, using manual/database result");
-            }
-        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -451,17 +446,19 @@
             }
         }
 
-        // Admin မှ ယနေ့ထွက်ဂဏန်း အသစ်ပြင်ဆင်သည့် Function
+        // Admin မှ 2D မနက်/ညနေ + 3D ထွက်ဂဏန်း အသစ်ပြင်ဆင်သည့် Function
         function updateLiveResults() {
             const amVal = document.getElementById('adminAMInput').value.trim();
             const pmVal = document.getElementById('adminPMInput').value.trim();
+            const tdVal = document.getElementById('admin3DInput').value.trim();
 
             db.ref('live_results').set({
                 am: amVal || '--',
-                pm: pmVal || '--'
+                pm: pmVal || '--',
+                threed: tdVal || '---'
             }, (err) => {
                 if(!err) {
-                    alert("ထွက်ဂဏန်း အသစ်ပြင်ဆင်ပြီးပါပြီ!");
+                    alert("2D/3D ထွက်ဂဏန်း အသစ်ပြင်ဆင်ပြီးပါပြီ!");
                 }
             });
         }
