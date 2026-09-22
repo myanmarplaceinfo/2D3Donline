@@ -555,8 +555,11 @@
                 status: 'Pending'
             };
 
+            // ၁။ Firebase သို့ သိမ်းဆည်းခြင်း
             db.ref('orders/' + orderId).set(newOrder, (error) => {
                 if (!error) {
+                    
+                    // ၂။ Telegram Bot ဆီ စာပို့ခြင်း
                     let itemsSummary = cart.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
                     let telegramMessage = `🛒 <b>အော်ဒါအသစ် ရောက်ရှိပါသည်။</b>\n\n` +
                                           `🆔 <b>Order ID:</b> ${orderId}\n` +
@@ -577,10 +580,14 @@
                         updateCartUI();
                         toggleCartModal();
 
+                        // ၃။ Customer ထံ အော်ဒါ တင်ပြီးကြောင်း သတိပေးချက် ပြသခြင်း
+                        alert(`🎉 အော်ဒါ တင်ပြီးပါပြီ!\n\nOrder ID: ${orderId}\nစုစုပေါင်း: ${total.toLocaleString()} Ks\n\nကျေးဇူးပြု၍ ငွေလွှဲပေးပါရန်။`);
+
+                        // ၄။ ငွေလွှဲ App သို့ သွားခြင်း
                         setTimeout(() => {
                             if(method.includes('KBZPay')) window.location.href = "kbzpay://";
                             else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
-                        }, 300);
+                        }, 500);
                     }).catch(err => {
                         console.error("Telegram Noti Error:", err);
                     });
