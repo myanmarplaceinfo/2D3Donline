@@ -489,37 +489,62 @@
         }
 
         function submitOrder() {
-            if(cart.length === 0) return;
+    if(cart.length === 0) return;
 
-            const method = document.getElementById('paymentMethod').value;
-            const total = cart.reduce((sum, item) => sum + item.amount, 0);
-            const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+    const method = document.getElementById('paymentMethod').value;
+    const total = cart.reduce((sum, item) => sum + item.amount, 0);
+    const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
-            const newOrder = {
-                id: orderId,
-                userId: userId,
-                date: new Date().toLocaleString('en-US', { hour12: true }),
-                items: cart,
-                total: total,
-                payment: method,
-                status: 'Pending'
-            };
+    const newOrder = {
+        id: orderId,
+        userId: userId,
+        date: new Date().toLocaleString('en-US', { hour12: true }),
+        items: cart,
+        total: total,
+        payment: method,
+        status: 'Pending'
+    };
 
-            db.ref('orders/' + orderId).set(newOrder, (error) => {
-                if (!error) {
-                    cart = [];
-                    updateCartUI();
-                    toggleCartModal();
+    // ၁။ Firebase Realtime Database သို့ သိမ်းဆည်းခြင်း
+    db.ref('orders/' + orderId).set(newOrder, (error) => {
+        if (!error) {
+            
+            // ၂။ Telegram Bot ဆီ စာပို့မည့် မက်ဆေ့ဂျ် ပြင်ဆင်ခြင်း
+            let itemsSummary = cart.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
+            let telegramMessage = `🛒 <b>အော်ဒါအသစ် ရောက်ရှိပါသည်။</b>\n\n` +
+                                  `🆔 <b>Order ID:</b> ${orderId}\n` +
+                                  `👤 <b>User ID:</b> ${userId}\n` +
+                                  `💳 <b>Payment:</b> ${method}\n\n` +
+                                  `<b>ထိုးထားသော ဂဏန်းများ:</b>\n${itemsSummary}\n\n` +
+                                  `💰 <b>စုစုပေါင်း:</b> ${total.toLocaleString()} Ks`;
 
-                    setTimeout(() => {
-                        if(method.includes('KBZPay')) window.location.href = "kbzpay://";
-                        else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
-                    }, 300);
-                } else {
-                    alert("အမှားအယွင်းရှိပါသည်: " + error.message);
-                }
+            // ၃။ Google Apps Script ကြားခံ Webhook ဖြင့် လုံခြုံစွာ စာပို့ခြင်း (Token Revoke မဖြစ်တော့ပါ)
+            const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxHJc3kXHvnYUi0ivyUNKhIyLgNhqIIMLPNG2lzQBlBAT9YGScMD3kHH_Za57Sw_Y2HoQ/exec";
+
+            fetch(googleScriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: telegramMessage })
+            }).then(() => {
+                cart = [];
+                updateCartUI();
+                toggleCartModal();
+
+                // Payment App သို့ သွားခြင်း
+                setTimeout(() => {
+                    if(method.includes('KBZPay')) window.location.href = "kbzpay://";
+                    else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
+                }, 300);
+            }).catch(err => {
+                console.error("Telegram Noti Error:", err);
             });
+
+        } else {
+            alert("အမှားအယွင်းရှိပါသည်: " + error.message);
         }
+    });
+}
 
         function toggleAdminView() {
             if (!isAdminLoggedIn) {
