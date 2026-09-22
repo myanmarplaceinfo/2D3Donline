@@ -29,7 +29,7 @@
                 <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">N</div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
-                    <p id="userInfoDisplay" class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ် </p>
+                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ် </p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -136,76 +136,8 @@
                     <span class="text-2xl font-bold text-amber-400">၅၀၀ ဆ</span>
                 </div>
             </section>
-
-            <!-- Telegram Support Section -->
-            <section class="glass rounded-2xl p-4 border border-sky-500/30 text-center space-y-2">
-                <h3 class="text-sm font-bold text-sky-400 flex items-center justify-center gap-1.5">
-                    <i data-lucide="message-square" class="w-4 h-4"></i>
-                    အကူအညီ လိုအပ်ပါက ဆက်သွယ်ရန်
-                </h3>
-                <p class="text-xs text-slate-400">ငွေသွင်း/ငွေထုတ် နှင့် အခြား မေးမြန်းလိုသည်များအတွက် Admin သို့ တိုက်ရိုက် ဆက်သွယ်နိုင်ပါသည်။</p>
-                <a href="https://t.me/skyone8888" target="_blank" class="inline-flex items-center justify-center space-x-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all w-full shadow-lg">
-                    <i class="fa-brands fa-telegram text-base"></i>
-                    <span>Telegram (@skyone8888) မှ ဆက်သွယ်ရန်</span>
-                </a>
-            </section>
         </div>
     </main>
-
-    <!-- Login Modal (User & Admin သီးသန့် ခွဲခြားထားသော Modal) -->
-    <div id="loginModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-amber-500/40 w-full max-w-sm rounded-2xl p-6 space-y-4 text-center shadow-2xl">
-            <div class="w-12 h-12 rounded-full blue-gradient mx-auto flex items-center justify-center font-bold text-slate-950 text-2xl border border-sky-300">N</div>
-            
-            <!-- User Login Form -->
-            <div id="userLoginForm" class="space-y-4">
-                <div>
-                    <h3 class="font-bold text-amber-400 text-lg">မင်္ဂလာပါ 2D/3D Store မှ ကြိုဆိုပါတယ်</h3>
-                    <p class="text-xs text-slate-400 mt-1">ပေါက်ဂဏန်း အလျော်အစား တိကျစေရန် အောက်ပါ အချက်အလက်များ ဖြည့်စွက်ပေးပါဗျ။</p>
-                </div>
-                <div class="space-y-3 text-left">
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">မိတ်ဆွေ နာမည်</label>
-                        <input type="text" id="loginName" placeholder="ဥပမာ - မောင်မောင်" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">ဖုန်းနံပါတ်</label>
-                        <input type="tel" id="loginPhone" placeholder="ဥပမာ - 09123456789" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-                <button onclick="saveUserProfile()" class="w-full gold-gradient text-slate-950 font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition-all text-sm">
-                    စတင် အသုံးပြုမည်
-                </button>
-                <div class="pt-2 border-t border-slate-800">
-                    <button onclick="showAdminForm()" class="text-xs text-slate-400 hover:text-amber-400 transition-all flex items-center justify-center gap-1 mx-auto">
-                        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                        <span>🔑 Admin စနစ်သို့ ဝင်ရန်</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Admin Login Form (သီးသန့်) -->
-            <div id="adminLoginForm" class="space-y-4 hidden">
-                <div>
-                    <h3 class="font-bold text-emerald-400 text-lg">Admin Login</h3>
-                    <p class="text-xs text-slate-400 mt-1">ဒိုင်စနစ် ထိန်းချုပ်ရန် Passcode ရိုက်ထည့်ပါဗျ။</p>
-                </div>
-                <div class="text-left">
-                    <label class="block text-xs text-slate-400 mb-1">Admin Passcode</label>
-                    <input type="password" id="adminPassInput" placeholder="Passcode ရိုက်ပါ" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
-                </div>
-                <button onclick="loginAsAdmin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all text-sm">
-                    Admin အဖြစ် ဝင်ရောက်မည်
-                </button>
-                <div class="pt-2 border-t border-slate-800">
-                    <button onclick="showUserForm()" class="text-xs text-slate-400 hover:text-slate-200 transition-all mx-auto">
-                        ← Customer Form သို့ ပြန်သွားရန်
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
 
     <!-- Calendar Modal -->
     <div id="calendarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
@@ -272,14 +204,19 @@
                     <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
                     <span id="historyTitle">မိမိထိုးခဲ့သော စာရင်းများ</span>
                 </h3>
-                <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <div class="flex items-center gap-2">
+                    <button id="adminToggleBtn" onclick="toggleAdminView()" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 px-2.5 py-1 rounded-lg">
+                        Admin Mode
+                    </button>
+                    <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
             </div>
 
-            <!-- Admin Live Result Update Panel -->
+            <!-- Admin Live Result Update Panel (2D & 3D ပါဝင်သည်) -->
             <div id="adminResultPanel" class="hidden bg-slate-800/90 p-3 rounded-xl border border-amber-500/30 space-y-2 text-xs">
                 <div class="font-bold text-amber-400 flex items-center gap-1">
                     <i data-lucide="edit-3" class="w-4 h-4"></i>
-                    [Admin Panel] 2D / 3D ထွက်ဂဏန်း ပြင်ဆင်ရန်
+                    [Admin] 2D / 3D ထွက်ဂဏန်း ပြင်ဆင်ရန်
                 </div>
                 <div class="grid grid-cols-3 gap-2">
                     <div>
@@ -320,7 +257,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let userProfile = JSON.parse(localStorage.getItem('2d3d_user_profile'));
+        let userId = localStorage.getItem('2d3d_user_id');
+        if (!userId) {
+            userId = 'USER-' + Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem('2d3d_user_id', userId);
+        }
 
         let currentMode = '2D';
         let isR = false;
@@ -333,13 +274,6 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('todayDateStr').innerText = today;
             lucide.createIcons();
-
-            // Profile စစ်ဆေးခြင်း
-            if (!userProfile && !isAdminLoggedIn) {
-                document.getElementById('loginModal').classList.remove('hidden');
-            } else {
-                updateUserHeader();
-            }
 
             // Firebase မှ Realtime 2D & 3D ထွက်ဂဏန်းများကို စောင့်ကြည့်ခြင်း
             db.ref('live_results').on('value', (snapshot) => {
@@ -369,59 +303,6 @@
                 renderHistory();
             });
         };
-
-        function showAdminForm() {
-            document.getElementById('userLoginForm').classList.add('hidden');
-            document.getElementById('adminLoginForm').classList.remove('hidden');
-        }
-
-        function showUserForm() {
-            document.getElementById('adminLoginForm').classList.add('hidden');
-            document.getElementById('userLoginForm').classList.remove('hidden');
-        }
-
-        function loginAsAdmin() {
-            const pass = document.getElementById('adminPassInput').value.trim();
-            if (pass === ADMIN_PASSCODE) {
-                isAdminLoggedIn = true;
-                document.getElementById('loginModal').classList.add('hidden');
-                document.getElementById('userInfoDisplay').innerText = "👑 Admin Mode Active";
-                document.getElementById('userInfoDisplay').classList.replace("text-slate-400", "text-emerald-400");
-                document.getElementById('historyTitle').innerText = "စာရင်းအားလုံး (Admin Dashboard)";
-                document.getElementById('adminResultPanel').classList.remove('hidden');
-                renderHistory();
-            } else {
-                alert("Passcode မှားယွင်းနေပါသည်။");
-            }
-        }
-
-        function saveUserProfile() {
-            const name = document.getElementById('loginName').value.trim();
-            const phone = document.getElementById('loginPhone').value.trim();
-
-            if (!name || !phone) {
-                alert("ကျေးဇူးပြု၍ နာမည်နှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါဗျ။");
-                return;
-            }
-
-            userProfile = {
-                id: 'USER-' + Math.floor(100000 + Math.random() * 900000),
-                name: name,
-                phone: phone
-            };
-
-            localStorage.setItem('2d3d_user_profile', JSON.stringify(userProfile));
-            document.getElementById('loginModal').classList.add('hidden');
-            updateUserHeader();
-        }
-
-        function updateUserHeader() {
-            if (isAdminLoggedIn) {
-                document.getElementById('userInfoDisplay').innerText = "👑 Admin Mode Active";
-            } else if (userProfile) {
-                document.getElementById('userInfoDisplay').innerText = `👤 ${userProfile.name} (${userProfile.phone})`;
-            }
-        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -458,11 +339,6 @@
         }
 
         function addToCart() {
-            if (!userProfile && !isAdminLoggedIn) {
-                document.getElementById('loginModal').classList.remove('hidden');
-                return;
-            }
-
             const num = document.getElementById('numInput').value.trim();
             const amt = parseInt(document.getElementById('amountInput').value);
 
@@ -523,9 +399,7 @@
 
             const newOrder = {
                 id: orderId,
-                userId: isAdminLoggedIn ? 'ADMIN' : userProfile.id,
-                userName: isAdminLoggedIn ? 'Admin (Test)' : userProfile.name,
-                userPhone: isAdminLoggedIn ? 'Admin Phone' : userProfile.phone,
+                userId: userId,
                 date: new Date().toLocaleString('en-US', { hour12: true }),
                 items: cart,
                 total: total,
@@ -549,6 +423,30 @@
             });
         }
 
+        function toggleAdminView() {
+            if (!isAdminLoggedIn) {
+                const pass = prompt("Admin Passcode ရိုက်ထည့်ပါ:");
+                if (pass === ADMIN_PASSCODE) {
+                    isAdminLoggedIn = true;
+                    document.getElementById('adminToggleBtn').innerText = "Customer Mode";
+                    document.getElementById('adminToggleBtn').classList.replace("text-amber-400", "text-emerald-400");
+                    document.getElementById('historyTitle').innerText = "စာရင်းအားလုံး (Admin)";
+                    document.getElementById('adminResultPanel').classList.remove('hidden');
+                    renderHistory();
+                } else if (pass !== null) {
+                    alert("Passcode မှားယွင်းနေပါသည်။");
+                }
+            } else {
+                isAdminLoggedIn = false;
+                document.getElementById('adminToggleBtn').innerText = "Admin Mode";
+                document.getElementById('adminToggleBtn').classList.replace("text-emerald-400", "text-amber-400");
+                document.getElementById('historyTitle').innerText = "မိမိထိုးခဲ့သော စာရင်းများ";
+                document.getElementById('adminResultPanel').classList.add('hidden');
+                renderHistory();
+            }
+        }
+
+        // Admin မှ 2D မနက်/ညနေ + 3D ထွက်ဂဏန်း အသစ်ပြင်ဆင်သည့် Function
         function updateLiveResults() {
             const amVal = document.getElementById('adminAMInput').value.trim();
             const pmVal = document.getElementById('adminPMInput').value.trim();
@@ -575,7 +473,7 @@
             const historyEl = document.getElementById('historyList');
             const displayOrders = isAdminLoggedIn 
                 ? history 
-                : history.filter(o => o.userId === (userProfile ? userProfile.id : ''));
+                : history.filter(o => o.userId === userId);
 
             if(displayOrders.length === 0) {
                 historyEl.innerHTML = `<p class="text-center text-slate-500 py-6 text-sm">${isAdminLoggedIn ? 'ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ' : 'မိတ်ဆွေ ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ'}</p>`;
@@ -590,13 +488,6 @@
                             ${order.status === 'Confirmed' ? '✓ Confirmed (ငွေလက်ခံရရှိပြီး)' : '⏳ Pending (ငွေစစ်နေသည်)'}
                         </span>
                     </div>
-
-                    ${isAdminLoggedIn ? `
-                        <div class="text-xs text-sky-400 font-bold bg-slate-900/50 p-2 rounded-lg border border-slate-700/50">
-                            👤 ${order.userName \vert{}\vert{} 'Unknown'} - 📞 ${order.userPhone || 'N/A'}
-                        </div>
-                    ` : ''}
-
                     <div class="space-y-1">
                         ${order.items.map(i => `
                             <div class="flex justify-between text-xs">
@@ -606,7 +497,7 @@
                         `).join('')}
                     </div>
                     <div class="border-t border-slate-700/50 pt-2 flex justify-between items-center text-xs">
-                        <span class="text-slate-400">Payment: ${order.payment}</span>
+                        <span class="text-slate-400">Payment: ${order.payment} ${isAdminLoggedIn ? `<br><span class="text-sky-400">ID: ${order.userId}</span>` : ''}</span>
                         <span class="font-bold text-amber-400 text-sm">${order.total.toLocaleString()} Ks</span>
                     </div>
 
