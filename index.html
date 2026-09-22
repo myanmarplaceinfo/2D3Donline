@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D&3D Website </title>
+    <title>2D&3D Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -197,17 +197,43 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <h3 class="font-bold text-slate-200 text-lg flex items-center gap-2">
                     <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
-                    ထိုးခဲ့သော စာရင်းများ (Live Database)
+                    <span id="historyTitle">မိမိထိုးခဲ့သော စာရင်းများ</span>
                 </h3>
-                <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <div class="flex items-center gap-2">
+                    <button id="adminToggleBtn" onclick="toggleAdminView()" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 px-2.5 py-1 rounded-lg">
+                        Admin Mode
+                    </button>
+                    <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
             </div>
+
+            <!-- Admin Live Result Update Panel (Admin Mode ဖွင့်ထားမှ ပေါ်မည်) -->
+            <div id="adminResultPanel" class="hidden bg-slate-800/90 p-3 rounded-xl border border-amber-500/30 space-y-2 text-xs">
+                <div class="font-bold text-amber-400 flex items-center gap-1">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    [Admin] ယနေ့ထွက်ဂဏန်း ပြင်ဆင်ရန်
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-slate-400 block mb-1">12:01 PM (မနက်)</label>
+                        <input type="text" id="adminAMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">04:30 PM (ညနေ)</label>
+                        <input type="text" id="adminPMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+                    </div>
+                </div>
+                <button onclick="updateLiveResults()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 rounded transition-all">
+                    ထွက်ဂဏန်း အသစ်တင်မည်
+                </button>
+            </div>
+
             <div id="historyList" class="flex-1 overflow-y-auto space-y-3 py-2"></div>
         </div>
     </div>
 
     <!-- Firebase Logic & Application Scripts -->
     <script>
-        // အစ်ကို့ Firebase Config အချက်အလက်များ
         const firebaseConfig = {
             apiKey: "AIzaSyBf5q8K7WEI8USJ6aui3VODa_nlp3td37I",
             authDomain: "my2d3dwebsite.firebaseapp.com",
@@ -219,14 +245,20 @@
             measurementId: "G-2P1Z0X9VNZ"
         };
 
-        // Firebase ကို အစပျိုးခြင်း
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        let userId = localStorage.getItem('2d3d_user_id');
+        if (!userId) {
+            userId = 'USER-' + Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem('2d3d_user_id', userId);
+        }
 
         let currentMode = '2D';
         let isR = false;
         let cart = [];
         let history = [];
+        let isAdminLoggedIn = false;
         const ADMIN_PASSCODE = "331249";
 
         window.onload = function() {
@@ -234,7 +266,20 @@
             document.getElementById('todayDateStr').innerText = today;
             lucide.createIcons();
 
-            // Firebase မှ စာရင်းများကို Realtime (စက္ကန့်နှင့်အမျှ) စောင့်ကြည့်ခြင်း
+            // Firebase မှ Realtime ထွက်ဂဏန်းများကို စောင့်ကြည့်ခြင်း
+            db.ref('live_results').on('value', (snapshot) => {
+                const res = snapshot.val();
+                if (res) {
+                    document.getElementById('todayAM').innerText = res.am || '--';
+                    document.getElementById('todayPM').innerText = res.pm || '--';
+                    if (document.getElementById('adminAMInput')) {
+                        document.getElementById('adminAMInput').value = res.am || '';
+                        document.getElementById('adminPMInput').value = res.pm || '';
+                    }
+                }
+            });
+
+            // Firebase မှ Realtime စာရင်းများ ဖတ်ယူခြင်း
             db.ref('orders').on('value', (snapshot) => {
                 const data = snapshot.val();
                 history = [];
@@ -245,7 +290,24 @@
                 }
                 renderHistory();
             });
+
+            // အခမဲ့ API မှ 2D ဂဏန်း အလိုအလျောက် ရယူရန် စမ်းသပ်ခြင်း
+            fetchLiveAPI();
         };
+
+        async function fetchLiveAPI() {
+            try {
+                let res = await fetch('https://2dapi.com/api/live');
+                let data = await res.json();
+                if (data && data.live) {
+                    if (!document.getElementById('todayAM').innerText || document.getElementById('todayAM').innerText === '--') {
+                        document.getElementById('todayAM').innerText = data.live.twod || '--';
+                    }
+                }
+            } catch (e) {
+                console.log("API Fetch error, using manual/database result");
+            }
+        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -333,7 +395,6 @@
         function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
         function toggleHistoryModal() { document.getElementById('historyModal').classList.toggle('hidden'); }
 
-        // Firebase သို့ စာရင်း အလိုအလျောက် ပို့ပေးသည့် Function
         function submitOrder() {
             if(cart.length === 0) return;
 
@@ -343,6 +404,7 @@
 
             const newOrder = {
                 id: orderId,
+                userId: userId,
                 date: new Date().toLocaleString('en-US', { hour12: true }),
                 items: cart,
                 total: total,
@@ -350,44 +412,78 @@
                 status: 'Pending'
             };
 
-            // Firebase ရဲ့ Database ထဲသို့ စာရင်းအသစ် လှမ်းပို့ခြင်း
             db.ref('orders/' + orderId).set(newOrder, (error) => {
                 if (!error) {
                     cart = [];
                     updateCartUI();
                     toggleCartModal();
 
-                    // KPay / WavePay ပွင့်စေခြင်း
                     setTimeout(() => {
                         if(method.includes('KBZPay')) window.location.href = "kbzpay://";
                         else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
                     }, 300);
                 } else {
-                    alert("စာရင်းပို့ဆောင်ရာတွင် အမှားအယွင်းရှိပါသည်: " + error.message);
+                    alert("အမှားအယွင်းရှိပါသည်: " + error.message);
                 }
             });
         }
 
-        // Admin မှ Passcode ရိုက်၍ Confirm လိုက်ပါက Firebase ထဲတွင် ပြောင်းလဲခြင်း
-        function adminApproveOrder(orderId) {
-            const inputCode = prompt("Admin Passcode ရိုက်ထည့်ပါ:");
-            if(inputCode === ADMIN_PASSCODE) {
-                db.ref('orders/' + orderId).update({
-                    status: 'Confirmed'
-                });
-            } else if (inputCode !== null) {
-                alert("Passcode မှားယွင်းနေပါသည်။");
+        function toggleAdminView() {
+            if (!isAdminLoggedIn) {
+                const pass = prompt("Admin Passcode ရိုက်ထည့်ပါ:");
+                if (pass === ADMIN_PASSCODE) {
+                    isAdminLoggedIn = true;
+                    document.getElementById('adminToggleBtn').innerText = "Customer Mode";
+                    document.getElementById('adminToggleBtn').classList.replace("text-amber-400", "text-emerald-400");
+                    document.getElementById('historyTitle').innerText = "စာရင်းအားလုံး (Admin)";
+                    document.getElementById('adminResultPanel').classList.remove('hidden');
+                    renderHistory();
+                } else if (pass !== null) {
+                    alert("Passcode မှားယွင်းနေပါသည်။");
+                }
+            } else {
+                isAdminLoggedIn = false;
+                document.getElementById('adminToggleBtn').innerText = "Admin Mode";
+                document.getElementById('adminToggleBtn').classList.replace("text-emerald-400", "text-amber-400");
+                document.getElementById('historyTitle').innerText = "မိမိထိုးခဲ့သော စာရင်းများ";
+                document.getElementById('adminResultPanel').classList.add('hidden');
+                renderHistory();
             }
+        }
+
+        // Admin မှ ယနေ့ထွက်ဂဏန်း အသစ်ပြင်ဆင်သည့် Function
+        function updateLiveResults() {
+            const amVal = document.getElementById('adminAMInput').value.trim();
+            const pmVal = document.getElementById('adminPMInput').value.trim();
+
+            db.ref('live_results').set({
+                am: amVal || '--',
+                pm: pmVal || '--'
+            }, (err) => {
+                if(!err) {
+                    alert("ထွက်ဂဏန်း အသစ်ပြင်ဆင်ပြီးပါပြီ!");
+                }
+            });
+        }
+
+        function adminApproveOrder(orderId) {
+            db.ref('orders/' + orderId).update({
+                status: 'Confirmed'
+            });
         }
 
         function renderHistory() {
             const historyEl = document.getElementById('historyList');
-            if(history.length === 0) {
-                historyEl.innerHTML = `<p class="text-center text-slate-500 py-6 text-sm">ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ</p>`;
+            const displayOrders = isAdminLoggedIn 
+                ? history 
+                : history.filter(o => o.userId === userId);
+
+            if(displayOrders.length === 0) {
+                historyEl.innerHTML = `<p class="text-center text-slate-500 py-6 text-sm">${isAdminLoggedIn ? 'ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ' : 'မိတ်ဆွေ ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ'}</p>`;
                 return;
             }
 
-            historyEl.innerHTML = history.map(order => `
+            historyEl.innerHTML = displayOrders.map(order => `
                 <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/80 space-y-2">
                     <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/50 pb-2">
                         <span>${order.id} (${order.date})</span>
@@ -404,14 +500,14 @@
                         `).join('')}
                     </div>
                     <div class="border-t border-slate-700/50 pt-2 flex justify-between items-center text-xs">
-                        <span class="text-slate-400">Payment: ${order.payment}</span>
+                        <span class="text-slate-400">Payment: ${order.payment} ${isAdminLoggedIn ? `<br><span class="text-sky-400">ID: ${order.userId}</span>` : ''}</span>
                         <span class="font-bold text-amber-400 text-sm">${order.total.toLocaleString()} Ks</span>
                     </div>
 
-                    ${order.status === 'Pending' ? `
-                        <button onclick="adminApproveOrder('${order.id}')" class="w-full mt-2 bg-amber-600/80 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-xs transition-all flex items-center justify-center gap-1 border border-amber-500/50">
+                    ${(isAdminLoggedIn && order.status === 'Pending') ? `
+                        <button onclick="adminApproveOrder('${order.id}')" class="w-full mt-2 bg-emerald-600/80 hover:bg-emerald-600 text-white font-bold py-1.5 rounded-lg text-xs transition-all flex items-center justify-center gap-1 border border-emerald-500/50">
                             <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                            [Admin] ငွေဝင်ပါက အတည်ပြုမည် (Confirm)
+                            [Admin] အတည်ပြုမည် (Confirm)
                         </button>
                     ` : ''}
                 </div>
