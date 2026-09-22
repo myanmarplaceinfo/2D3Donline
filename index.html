@@ -29,7 +29,7 @@
                 <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">N</div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
-                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ်</p>
+                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ် </p>
                 </div>
             </div>
             <!-- Header Icons / Controls -->
@@ -97,7 +97,7 @@
                     <label class="block text-xs text-slate-400 mb-1">ဂဏန်း ရွေးချယ်ပါ</label>
                     <div class="flex space-x-2">
                         <input type="text" id="numInput" maxlength="2" placeholder="00 - 99" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-2xl font-bold text-amber-400 tracking-widest focus:outline-none focus:border-amber-500">
-                        <button onclick="toggleR()" id="rBtn" class="px-4 bg-slate-800 text-slate-300 font-bold rounded-xl border border-slate-700 text-sm hover:border-amber-500">R ပါ</button>
+                        <button onclick="toggleR()" id="rBtn" class="px-4 bg-slate-800 text-slate-300 font-bold rounded-xl border border-slate-700 text-sm hover:border-amber-500 transition-all">R ပါ</button>
                     </div>
                 </div>
                 <div>
@@ -232,29 +232,48 @@
                 </div>
             </div>
 
-            <!-- Admin Live Result Update Panel (2D & 3D ပါဝင်သည်) -->
-            <div id="adminResultPanel" class="hidden bg-slate-800/90 p-3 rounded-xl border border-amber-500/30 space-y-2 text-xs">
-                <div class="font-bold text-amber-400 flex items-center gap-1">
-                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                    [Admin] 2D / 3D ထွက်ဂဏန်း ပြင်ဆင်ရန်
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="text-slate-400 block mb-1">2D မနက်</label>
-                        <input type="text" id="adminAMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+            <!-- Admin Live Result Update Panel & Financial Dashboard -->
+            <div id="adminResultPanel" class="hidden space-y-3">
+                <!-- Financial Summary Cards -->
+                <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div class="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <span class="text-[10px] text-slate-400 block mb-0.5">စုစုပေါင်း ရောင်းရငွေ</span>
+                        <span id="adminTotalBets" class="font-bold text-amber-400 text-sm">0 Ks</span>
                     </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">2D ညနေ</label>
-                        <input type="text" id="adminPMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+                    <div class="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <span class="text-[10px] text-slate-400 block mb-0.5">စုစုပေါင်း လျော်ရမည်</span>
+                        <span id="adminTotalPayout" class="font-bold text-rose-400 text-sm">0 Ks</span>
                     </div>
-                    <div>
-                        <label class="text-amber-400 font-bold block mb-1">3D ထွက်ဂဏန်း</label>
-                        <input type="text" id="admin3DInput" maxlength="3" placeholder="000-999" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sky-400 font-bold">
+                    <div class="bg-slate-800/90 p-2.5 rounded-xl border border-slate-700">
+                        <span class="text-[10px] text-slate-400 block mb-0.5">အမြတ်/အရှုံး</span>
+                        <span id="adminNetProfit" class="font-bold text-emerald-400 text-sm">0 Ks</span>
                     </div>
                 </div>
-                <button onclick="updateLiveResults()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 rounded transition-all">
-                    ထွက်ဂဏန်း အသစ်တင်မည်
-                </button>
+
+                <!-- Live Results Inputs -->
+                <div class="bg-slate-800/90 p-3 rounded-xl border border-amber-500/30 space-y-2 text-xs">
+                    <div class="font-bold text-amber-400 flex items-center gap-1">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        [Admin] 2D / 3D ထွက်ဂဏန်း ပြင်ဆင်ရန်
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-slate-400 block mb-1">2D မနက်</label>
+                            <input type="text" id="adminAMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">2D ညနေ</label>
+                            <input type="text" id="adminPMInput" maxlength="2" placeholder="00-99" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-400 font-bold">
+                        </div>
+                        <div>
+                            <label class="text-amber-400 font-bold block mb-1">3D ထွက်ဂဏန်း</label>
+                            <input type="text" id="admin3DInput" maxlength="3" placeholder="000-999" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sky-400 font-bold">
+                        </div>
+                    </div>
+                    <button onclick="updateLiveResults()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 rounded transition-all">
+                        ထွက်ဂဏန်း အသစ်တင်မည် (Auto Win စစ်မည်)
+                    </button>
+                </div>
             </div>
 
             <div id="historyList" class="flex-1 overflow-y-auto space-y-3 py-2"></div>
@@ -287,6 +306,7 @@
         let isR = false;
         let cart = [];
         let history = [];
+        let liveResults = { am: '--', pm: '--', threed: '---' };
         let isAdminLoggedIn = false;
         const ADMIN_PASSCODE = "331249";
 
@@ -299,6 +319,7 @@
             db.ref('live_results').on('value', (snapshot) => {
                 const res = snapshot.val();
                 if (res) {
+                    liveResults = res;
                     document.getElementById('todayAM').innerText = res.am || '--';
                     document.getElementById('todayPM').innerText = res.pm || '--';
                     document.getElementById('today3D').innerText = res.threed || '---';
@@ -308,6 +329,7 @@
                         document.getElementById('adminPMInput').value = res.pm || '';
                         document.getElementById('admin3DInput').value = res.threed || '';
                     }
+                    renderHistory();
                 }
             });
 
@@ -349,8 +371,12 @@
 
         function toggleR() {
             isR = !isR;
-            document.getElementById('rBtn').classList.toggle('border-amber-500');
-            document.getElementById('rBtn').classList.toggle('text-amber-400');
+            const rBtn = document.getElementById('rBtn');
+            if (isR) {
+                rBtn.classList.add('border-amber-500', 'text-amber-400', 'bg-amber-500/10');
+            } else {
+                rBtn.classList.remove('border-amber-500', 'text-amber-400', 'bg-amber-500/10');
+            }
         }
 
         function setQuickAmount(amt) {
@@ -358,16 +384,61 @@
             amountInput.value = (parseInt(amountInput.value) || 0) + amt;
         }
 
+        // 3D မူရင်းဂဏန်းမှ ၆ ကွက် ပတ်လည် ထုတ်ပေးသည့် Function
+        function get3DPermutations(str) {
+            if (str.length !== 3) return [str];
+            let results = new Set();
+            function permute(arr, m = []) {
+                if (arr.length === 0) {
+                    results.add(m.join(''));
+                } else {
+                    for (let i = 0; i < arr.length; i++) {
+                        let curr = arr.slice();
+                        let next = curr.splice(i, 1);
+                        permute(curr.slice(), m.concat(next));
+                    }
+                }
+            }
+            permute(str.split(''));
+            return Array.from(results);
+        }
+
+        // R (လှည့်) စနစ်အပါအဝင် Cart ထဲသို့ ထည့်သွင်းခြင်း
         function addToCart() {
             const num = document.getElementById('numInput').value.trim();
             const amt = parseInt(document.getElementById('amountInput').value);
 
-            if(!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) return;
-            if(!amt || amt < 100) return;
+            if (!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) return;
+            if (!amt || amt < 100) return;
 
-            cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
+            let numbersToAdd = [];
+
+            if (isR) {
+                if (currentMode === '2D') {
+                    let reversed = num.split('').reverse().join('');
+                    numbersToAdd.push(num);
+                    if (num !== reversed) {
+                        numbersToAdd.push(reversed);
+                    }
+                } else if (currentMode === '3D') {
+                    numbersToAdd = get3DPermutations(num);
+                }
+            } else {
+                numbersToAdd.push(num);
+            }
+
+            numbersToAdd.forEach(n => {
+                cart.push({ id: Date.now() + Math.random(), mode: currentMode, number: n, amount: amt });
+            });
+
             document.getElementById('numInput').value = '';
             document.getElementById('amountInput').value = '';
+            
+            // R ခလုတ် အခြေအနေကို Reset ပြန်လုပ်ပေးခြင်း
+            if (isR) {
+                toggleR();
+            }
+
             updateCartUI();
         }
 
@@ -392,7 +463,7 @@
                             <span class="font-bold text-amber-400 text-lg mr-2">[${item.mode}] ${item.number}</span>
                             <span class="text-slate-300 text-sm">${item.amount.toLocaleString()} Ks</span>
                         </div>
-                        <button onclick="removeFromCart(${index})" class="text-rose-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <button onclick="removeFromCart(${index})" class="text-rose-400 hover:text-rose-300"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </div>
                 `;
             }).join('');
@@ -410,7 +481,6 @@
         function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
         function toggleHistoryModal() { document.getElementById('historyModal').classList.toggle('hidden'); }
 
-        // Header ရှိ Admin Shield Icon ကို နှိပ်လျှင် တိုက်ရိုက် Admin Login ခေါ်သည့် Function
         function toggleAdminModalDirectly() {
             toggleHistoryModal();
             if (!isAdminLoggedIn) {
@@ -474,7 +544,6 @@
             }
         }
 
-        // Admin မှ 2D မနက်/ညနေ + 3D ထွက်ဂဏန်း အသစ်ပြင်ဆင်သည့် Function
         function updateLiveResults() {
             const amVal = document.getElementById('adminAMInput').value.trim();
             const pmVal = document.getElementById('adminPMInput').value.trim();
@@ -486,7 +555,7 @@
                 threed: tdVal || '---'
             }, (err) => {
                 if(!err) {
-                    alert("2D/3D ထွက်ဂဏန်း အသစ်ပြင်ဆင်ပြီးပါပြီ!");
+                    alert("2D/3D ထွက်ဂဏန်း အသစ်ပြင်ဆင်ပြီးပါပြီ! ပေါက်မဲများ အလိုအလျောက် စစ်ဆေးပြီးပါပြီ။");
                 }
             });
         }
@@ -497,46 +566,113 @@
             });
         }
 
+        // စာရင်းများ ရေးဆွဲခြင်းနှင့် Auto Win / Financial Summary စစ်ဆေးခြင်း
         function renderHistory() {
             const historyEl = document.getElementById('historyList');
             const displayOrders = isAdminLoggedIn 
                 ? history 
                 : history.filter(o => o.userId === userId);
 
-            if(displayOrders.length === 0) {
+            // Admin Financial Calculation Variables
+            let totalBets = 0;
+            let totalPayout = 0;
+
+            if (displayOrders.length === 0) {
                 historyEl.innerHTML = `<p class="text-center text-slate-500 py-6 text-sm">${isAdminLoggedIn ? 'ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ' : 'မိတ်ဆွေ ထိုးခဲ့သော စာရင်းများ မရှိသေးပါ'}</p>`;
-                return;
+            } else {
+                historyEl.innerHTML = displayOrders.map(order => {
+                    let orderWinPayout = 0;
+                    let hasWin = false;
+
+                    // အတည်ပြုထားသော Order ဖြစ်လျှင် ထိုးကြေး ပမာဏ ပေါင်းထည့်မည်
+                    if (order.status === 'Confirmed') {
+                        totalBets += order.total;
+                    }
+
+                    const itemsHtml = order.items.map(i => {
+                        let isItemWin = false;
+                        let itemPayout = 0;
+
+                        // Auto Win Match Check Logic
+                        if (order.status === 'Confirmed') {
+                            if (i.mode === '2D') {
+                                if ((liveResults.am && liveResults.am !== '--' && i.number === liveResults.am) ||
+                                    (liveResults.pm && liveResults.pm !== '--' && i.number === liveResults.pm)) {
+                                    isItemWin = true;
+                                    itemPayout = i.amount * 80;
+                                }
+                            } else if (i.mode === '3D') {
+                                if (liveResults.threed && liveResults.threed !== '---' && i.number === liveResults.threed) {
+                                    isItemWin = true;
+                                    itemPayout = i.amount * 500;
+                                }
+                            }
+                        }
+
+                        if (isItemWin) {
+                            hasWin = true;
+                            orderWinPayout += itemPayout;
+                        }
+
+                        return `
+                            <div class="flex justify-between items-center text-xs py-0.5 ${isItemWin ? 'bg-emerald-500/20 px-2 rounded border border-emerald-500/30' : ''}">
+                                <span class="text-slate-200 font-bold">[${i.mode}] ${i.number} ${isItemWin ? '<span class="text-emerald-400 font-extrabold ml-1">🎉 WIN</span>' : ''}</span>
+                                <span class="${isItemWin ? 'text-emerald-300 font-bold' : 'text-slate-400'}">
+                                    ${i.amount.toLocaleString()} Ks ${isItemWin ? `(လျော်: ${itemPayout.toLocaleString()} Ks)` : ''}
+                                </span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    if (order.status === 'Confirmed') {
+                        totalPayout += orderWinPayout;
+                    }
+
+                    return `
+                        <div class="bg-slate-800/60 p-3 rounded-xl border ${hasWin ? 'border-emerald-500/80 shadow-md shadow-emerald-950' : 'border-slate-700/80'} space-y-2">
+                            <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/50 pb-2">
+                                <span>${order.id} (${order.date})</span>
+                                <span class="px-2 py-0.5 rounded ${order.status === 'Confirmed' ? (hasWin ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold') : 'bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold'}">
+                                    ${order.status === 'Confirmed' ? (hasWin ? '🎉 ပေါက်မဲ ဖြစ်သည်' : '✓ Confirmed (ငွေလက်ခံရရှိပြီး)') : '⏳ Pending (ငွေစစ်နေသည်)'}
+                                </span>
+                            </div>
+                            <div class="space-y-1">
+                                ${itemsHtml}
+                            </div>
+                            <div class="border-t border-slate-700/50 pt-2 flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Payment: ${order.payment} ${isAdminLoggedIn ? `<br><span class="text-sky-400">ID: ${order.userId}</span>` : ''}</span>
+                                <div class="text-right">
+                                    <span class="font-bold text-amber-400 text-sm block">${order.total.toLocaleString()} Ks</span>
+                                    ${hasWin ? `<span class="text-emerald-400 text-[11px] font-bold block">စုစုပေါင်း လျော်ရန်: ${orderWinPayout.toLocaleString()} Ks</span>` : ''}
+                                </div>
+                            </div>
+
+                            ${(isAdminLoggedIn && order.status === 'Pending') ? `
+                                <button onclick="adminApproveOrder('${order.id}')" class="w-full mt-2 bg-emerald-600/80 hover:bg-emerald-600 text-white font-bold py-1.5 rounded-lg text-xs transition-all flex items-center justify-center gap-1 border border-emerald-500/50">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                                    [Admin] အတည်ပြုမည် (Confirm)
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
             }
 
-            historyEl.innerHTML = displayOrders.map(order => `
-                <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/80 space-y-2">
-                    <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/50 pb-2">
-                        <span>${order.id} (${order.date})</span>
-                        <span class="px-2 py-0.5 rounded ${order.status === 'Confirmed' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'} font-bold">
-                            ${order.status === 'Confirmed' ? '✓ Confirmed (ငွေလက်ခံရရှိပြီး)' : '⏳ Pending (ငွေစစ်နေသည်)'}
-                        </span>
-                    </div>
-                    <div class="space-y-1">
-                        ${order.items.map(i => `
-                            <div class="flex justify-between text-xs">
-                                <span class="text-slate-200 font-bold">[${i.mode}]${i.number}</span>
-                                <span class="text-slate-400">${i.amount.toLocaleString()} Ks</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="border-t border-slate-700/50 pt-2 flex justify-between items-center text-xs">
-                        <span class="text-slate-400">Payment: ${order.payment} ${isAdminLoggedIn ? `<br><span class="text-sky-400">ID: ${order.userId}</span>` : ''}</span>
-                        <span class="font-bold text-amber-400 text-sm">${order.total.toLocaleString()} Ks</span>
-                    </div>
+            // Admin Dashboard Summary Update
+            if (isAdminLoggedIn) {
+                const netProfit = totalBets - totalPayout;
+                document.getElementById('adminTotalBets').innerText = totalBets.toLocaleString() + ' Ks';
+                document.getElementById('adminTotalPayout').innerText = totalPayout.toLocaleString() + ' Ks';
+                
+                const netProfitEl = document.getElementById('adminNetProfit');
+                netProfitEl.innerText = netProfit.toLocaleString() + ' Ks';
+                if (netProfit >= 0) {
+                    netProfitEl.className = "font-bold text-emerald-400 text-sm";
+                } else {
+                    netProfitEl.className = "font-bold text-rose-400 text-sm";
+                }
+            }
 
-                    ${(isAdminLoggedIn && order.status === 'Pending') ? `
-                        <button onclick="adminApproveOrder('${order.id}')" class="w-full mt-2 bg-emerald-600/80 hover:bg-emerald-600 text-white font-bold py-1.5 rounded-lg text-xs transition-all flex items-center justify-center gap-1 border border-emerald-500/50">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                            [Admin] အတည်ပြုမည် (Confirm)
-                        </button>
-                    ` : ''}
-                </div>
-            `).join('');
             lucide.createIcons();
         }
     </script>
