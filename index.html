@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D & 3D Website</title>
+    <title>2D & 3D Online Store - Nay Oake</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,7 +29,7 @@
                 <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">N</div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
-                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ် </p>
+                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ် (Nay Oake)</p>
                 </div>
             </div>
             <!-- Header Icons / Controls -->
@@ -225,6 +225,9 @@
                     <span id="historyTitle">မိမိထိုးခဲ့သော စာရင်းများ</span>
                 </h3>
                 <div class="flex items-center gap-2">
+                    <button id="clearHistoryBtn" onclick="clearUserHistory()" class="text-xs bg-rose-900/40 hover:bg-rose-800/60 border border-rose-500/30 text-rose-300 px-2.5 py-1 rounded-lg">
+                        Clear History
+                    </button>
                     <button id="adminToggleBtn" onclick="toggleAdminView()" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 px-2.5 py-1 rounded-lg">
                         Admin Mode
                     </button>
@@ -248,6 +251,19 @@
                         <span class="text-[10px] text-slate-400 block mb-0.5">အမြတ်/အရှုံး</span>
                         <span id="adminNetProfit" class="font-bold text-emerald-400 text-sm">0 Ks</span>
                     </div>
+                </div>
+
+                <!-- Admin Limit & Closed Numbers Control Panel -->
+                <div class="bg-slate-800/90 p-3 rounded-xl border border-amber-500/30 space-y-2 text-xs">
+                    <div class="font-bold text-amber-400 flex items-center justify-between">
+                        <span class="flex items-center gap-1"><i data-lucide="lock" class="w-4 h-4"></i> [Admin] ဂဏန်း Limit / ပိတ်ဂဏန်း သတ်မှတ်ရန်</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <input type="text" id="limitNumInput" placeholder="ဂဏန်း (ဥပမာ- 58)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-200">
+                        <input type="number" id="limitAmtInput" placeholder="Limit (0 ဆိုရင် ပိတ်ပါမည်)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-200">
+                        <button onclick="setNumberLimit()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold rounded py-1">သတ်မှတ်မည်</button>
+                    </div>
+                    <div id="activeLimitsList" class="text-[11px] text-slate-400 pt-1 border-t border-slate-700 flex flex-wrap gap-1"></div>
                 </div>
 
                 <!-- Live Results Inputs -->
@@ -306,6 +322,7 @@
         let isR = false;
         let cart = [];
         let history = [];
+        let numberLimits = {}; // Limit & Closed Numbers
         let liveResults = { am: '--', pm: '--', threed: '---' };
         let isAdminLoggedIn = false;
         const ADMIN_PASSCODE = "331249";
@@ -333,13 +350,19 @@
                 }
             });
 
+            // Firebase မှ Limits အချက်အလက်များ ဖတ်ယူခြင်း
+            db.ref('number_limits').on('value', (snapshot) => {
+                numberLimits = snapshot.val() || {};
+                renderActiveLimits();
+            });
+
             // Firebase မှ Realtime စာရင်းများ ဖတ်ယူခြင်း
             db.ref('orders').on('value', (snapshot) => {
                 const data = snapshot.val();
                 history = [];
                 if (data) {
                     Object.keys(data).forEach(key => {
-                        history.unshift(data[key]);
+                        history.unshift({ ...data[key], key: key });
                     });
                 }
                 renderHistory();
@@ -373,9 +396,9 @@
             isR = !isR;
             const rBtn = document.getElementById('rBtn');
             if (isR) {
-                rBtn.classList.add('border-amber-500', 'text-amber-400', 'bg-amber-500/10');
+                rBtn.classList.add('border-amber-500', 'text-amber-400', 'bg-amber-500/20');
             } else {
-                rBtn.classList.remove('border-amber-500', 'text-amber-400', 'bg-amber-500/10');
+                rBtn.classList.remove('border-amber-500', 'text-amber-400', 'bg-amber-500/20');
             }
         }
 
@@ -403,13 +426,19 @@
             return Array.from(results);
         }
 
-        // R (လှည့်) စနစ်အပါအဝင် Cart ထဲသို့ ထည့်သွင်းခြင်း
+        // R (လှည့်) စနစ်အပါအဝင် Cart ထဲသို့ ထည့်သွင်းခြင်း (Limit Check အပါအဝင်)
         function addToCart() {
             const num = document.getElementById('numInput').value.trim();
             const amt = parseInt(document.getElementById('amountInput').value);
 
-            if (!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) return;
-            if (!amt || amt < 100) return;
+            if (!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) {
+                alert("ဂဏန်း မှန်ကန်စွာ ရိုက်ထည့်ပါ");
+                return;
+            }
+            if (!amt || amt < 100) {
+                alert("အနည်းဆုံး ထိုးကြေး ၁၀၀ ကျပ် ဖြည့်ပါ");
+                return;
+            }
 
             let numbersToAdd = [];
 
@@ -427,6 +456,20 @@
                 numbersToAdd.push(num);
             }
 
+            // Limit & Closed Check
+            for (let n of numbersToAdd) {
+                if (numberLimits[n] !== undefined) {
+                    let maxLimit = numberLimits[n];
+                    if (maxLimit === 0) {
+                        alert(`ဂဏန်း [${n}] သည် ပိတ်ထားသော ဂဏန်း ဖြစ်ပါသည်!`);
+                        return;
+                    } else if (amt > maxLimit) {
+                        alert(`ဂဏန်း [${n}] သည် Limit ကျပ် ${maxLimit.toLocaleString()} ထက် ကျော်လွန်နေပါသည်!`);
+                        return;
+                    }
+                }
+            }
+
             numbersToAdd.forEach(n => {
                 cart.push({ id: Date.now() + Math.random(), mode: currentMode, number: n, amount: amt });
             });
@@ -434,7 +477,6 @@
             document.getElementById('numInput').value = '';
             document.getElementById('amountInput').value = '';
             
-            // R ခလုတ် အခြေအနေကို Reset ပြန်လုပ်ပေးခြင်း
             if (isR) {
                 toggleR();
             }
@@ -489,62 +531,62 @@
         }
 
         function submitOrder() {
-    if(cart.length === 0) return;
+            if(cart.length === 0) return;
 
-    const method = document.getElementById('paymentMethod').value;
-    const total = cart.reduce((sum, item) => sum + item.amount, 0);
-    const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const method = document.getElementById('paymentMethod').value;
+            const total = cart.reduce((sum, item) => sum + item.amount, 0);
+            const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
-    const newOrder = {
-        id: orderId,
-        userId: userId,
-        date: new Date().toLocaleString('en-US', { hour12: true }),
-        items: cart,
-        total: total,
-        payment: method,
-        status: 'Pending'
-    };
+            const newOrder = {
+                id: orderId,
+                userId: userId,
+                date: new Date().toLocaleString('en-US', { hour12: true }),
+                items: cart,
+                total: total,
+                payment: method,
+                status: 'Pending'
+            };
 
-    // ၁။ Firebase Realtime Database သို့ သိမ်းဆည်းခြင်း
-    db.ref('orders/' + orderId).set(newOrder, (error) => {
-        if (!error) {
-            
-            // ၂။ Telegram Bot ဆီ စာပို့မည့် မက်ဆေ့ဂျ် ပြင်ဆင်ခြင်း
-            let itemsSummary = cart.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
-            let telegramMessage = `🛒 <b>အော်ဒါအသစ် ရောက်ရှိပါသည်။</b>\n\n` +
-                                  `🆔 <b>Order ID:</b> ${orderId}\n` +
-                                  `👤 <b>User ID:</b> ${userId}\n` +
-                                  `💳 <b>Payment:</b> ${method}\n\n` +
-                                  `<b>ထိုးထားသော ဂဏန်းများ:</b>\n${itemsSummary}\n\n` +
-                                  `💰 <b>စုစုပေါင်း:</b> ${total.toLocaleString()} Ks`;
+            // ၁။ Firebase Realtime Database သို့ သိမ်းဆည်းခြင်း
+            db.ref('orders/' + orderId).set(newOrder, (error) => {
+                if (!error) {
+                    
+                    // ၂။ Telegram Bot ဆီ စာပို့မည့် မက်ဆေ့ဂျ် ပြင်ဆင်ခြင်း
+                    let itemsSummary = cart.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
+                    let telegramMessage = `🛒 <b>အော်ဒါအသစ် ရောက်ရှိပါသည်။</b>\n\n` +
+                                          `🆔 <b>Order ID:</b> ${orderId}\n` +
+                                          `👤 <b>User ID:</b> ${userId}\n` +
+                                          `💳 <b>Payment:</b> ${method}\n\n` +
+                                          `<b>ထိုးထားသော ဂဏန်းများ:</b>\n${itemsSummary}\n\n` +
+                                          `💰 <b>စုစုပေါင်း:</b> ${total.toLocaleString()} Ks`;
 
-            // ၃။ Google Apps Script ကြားခံ Webhook ဖြင့် လုံခြုံစွာ စာပို့ခြင်း (Token Revoke မဖြစ်တော့ပါ)
-            const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxHJc3kXHvnYUi0ivyUNKhIyLgNhqIIMLPNG2lzQBlBAT9YGScMD3kHH_Za57Sw_Y2HoQ/exec";
+                    // ၃။ Google Apps Script ကြားခံ Webhook ဖြင့် လုံခြုံစွာ စာပို့ခြင်း
+                    const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxHJc3kXHvnYUi0ivyUNKhIyLgNhqIIMLPNG2lzQBlBAT9YGScMD3kHH_Za57Sw_Y2HoQ/exec";
 
-            fetch(googleScriptUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: telegramMessage })
-            }).then(() => {
-                cart = [];
-                updateCartUI();
-                toggleCartModal();
+                    fetch(googleScriptUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: telegramMessage })
+                    }).then(() => {
+                        cart = [];
+                        updateCartUI();
+                        toggleCartModal();
 
-                // Payment App သို့ သွားခြင်း
-                setTimeout(() => {
-                    if(method.includes('KBZPay')) window.location.href = "kbzpay://";
-                    else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
-                }, 300);
-            }).catch(err => {
-                console.error("Telegram Noti Error:", err);
+                        // Payment App သို့ သွားခြင်း
+                        setTimeout(() => {
+                            if(method.includes('KBZPay')) window.location.href = "kbzpay://";
+                            else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
+                        }, 300);
+                    }).catch(err => {
+                        console.error("Telegram Noti Error:", err);
+                    });
+
+                } else {
+                    alert("အမှားအယွင်းရှိပါသည်: " + error.message);
+                }
             });
-
-        } else {
-            alert("အမှားအယွင်းရှိပါသည်: " + error.message);
         }
-    });
-}
 
         function toggleAdminView() {
             if (!isAdminLoggedIn) {
@@ -553,6 +595,7 @@
                     isAdminLoggedIn = true;
                     document.getElementById('adminToggleBtn').innerText = "Customer Mode";
                     document.getElementById('adminToggleBtn').classList.replace("text-amber-400", "text-emerald-400");
+                    document.getElementById('clearHistoryBtn').innerText = "Clear All Orders";
                     document.getElementById('historyTitle').innerText = "စာရင်းအားလုံး (Admin)";
                     document.getElementById('adminResultPanel').classList.remove('hidden');
                     renderHistory();
@@ -563,6 +606,7 @@
                 isAdminLoggedIn = false;
                 document.getElementById('adminToggleBtn').innerText = "Admin Mode";
                 document.getElementById('adminToggleBtn').classList.replace("text-emerald-400", "text-amber-400");
+                document.getElementById('clearHistoryBtn').innerText = "Clear History";
                 document.getElementById('historyTitle').innerText = "မိမိထိုးခဲ့သော စာရင်းများ";
                 document.getElementById('adminResultPanel').classList.add('hidden');
                 renderHistory();
@@ -585,20 +629,82 @@
             });
         }
 
+        // Admin Order Approval, Decline and Delete
         function adminApproveOrder(orderId) {
-            db.ref('orders/' + orderId).update({
-                status: 'Confirmed'
+            db.ref('orders/' + orderId).update({ status: 'Confirmed' });
+        }
+
+        function adminDeclineOrder(orderId) {
+            if(confirm("ဒီ Order ကို ငြင်းပယ် (Decline) ရန် သေချာပါသလား?")) {
+                db.ref('orders/' + orderId).update({ status: 'Declined' });
+            }
+        }
+
+        function adminDeleteOrder(orderId) {
+            if(confirm("ဒီ Order ကို လုံးဝ ဖျက်ပစ်ရန် သေချာပါသလား?")) {
+                db.ref('orders/' + orderId).remove();
+            }
+        }
+
+        // Limit & Closed Numbers Control Logic
+        function setNumberLimit() {
+            const num = document.getElementById('limitNumInput').value.trim();
+            const amtStr = document.getElementById('limitAmtInput').value.trim();
+
+            if (!num) return alert("ဂဏန်း ရိုက်ထည့်ပါ");
+            if (amtStr === "") return alert("Limit ပမာဏ ရိုက်ထည့်ပါ (0 ဆိုရင် ပိတ်ပါမည်)");
+
+            const amt = parseInt(amtStr);
+            db.ref('number_limits/' + num).set(amt, (err) => {
+                if (!err) {
+                    document.getElementById('limitNumInput').value = '';
+                    document.getElementById('limitAmtInput').value = '';
+                    alert(`ဂဏန်း [${num}] အတွက် Limit ${amt.toLocaleString()} Ks သတ်မှတ်ပြီးပါပြီ!`);
+                }
             });
         }
 
-        // စာရင်းများ ရေးဆွဲခြင်းနှင့် Auto Win / Financial Summary စစ်ဆေးခြင်း
+        function removeNumberLimit(num) {
+            db.ref('number_limits/' + num).remove();
+        }
+
+        function renderActiveLimits() {
+            const listEl = document.getElementById('activeLimitsList');
+            if (!listEl) return;
+            const keys = Object.keys(numberLimits);
+            if (keys.length === 0) {
+                listEl.innerHTML = "သတ်မှတ်ထားသော ပိတ်ဂဏန်း / Limit မရှိသေးပါ";
+                return;
+            }
+            listEl.innerHTML = keys.map(k => `
+                <span class="bg-slate-900 px-2 py-0.5 rounded border border-slate-700 flex items-center gap-1">
+                    <b>${k}:</b> ${numberLimits[k] === 0 ? '<span class="text-rose-400 font-bold">ပိတ်</span>' : numberLimits[k].toLocaleString() + 'Ks'}
+                    <button onclick="removeNumberLimit('${k}')" class="text-rose-400 hover:text-white font-bold ml-1">&times;</button>
+                </span>
+            `).join('');
+        }
+
+        // History Clear Logic
+        function clearUserHistory() {
+            if (isAdminLoggedIn) {
+                if (confirm("အော်ဒါ စာရင်း အားလုံးကို ဖျက်ပစ်ရန် သေချာပါသလား? (Admin)")) {
+                    db.ref('orders').remove();
+                }
+            } else {
+                if (confirm("မိမိထိုးခဲ့သော စာရင်းများကို မျက်နှာပြင်ပေါ်မှ ရှင်းလင်းရန် သေချာပါသလား?")) {
+                    history = history.filter(o => o.userId !== userId);
+                    renderHistory();
+                }
+            }
+        }
+
+        // Render History and Financial Summary
         function renderHistory() {
             const historyEl = document.getElementById('historyList');
             const displayOrders = isAdminLoggedIn 
                 ? history 
                 : history.filter(o => o.userId === userId);
 
-            // Admin Financial Calculation Variables
             let totalBets = 0;
             let totalPayout = 0;
 
@@ -609,7 +715,6 @@
                     let orderWinPayout = 0;
                     let hasWin = false;
 
-                    // အတည်ပြုထားသော Order ဖြစ်လျှင် ထိုးကြေး ပမာဏ ပေါင်းထည့်မည်
                     if (order.status === 'Confirmed') {
                         totalBets += order.total;
                     }
@@ -618,7 +723,6 @@
                         let isItemWin = false;
                         let itemPayout = 0;
 
-                        // Auto Win Match Check Logic
                         if (order.status === 'Confirmed') {
                             if (i.mode === '2D') {
                                 if ((liveResults.am && liveResults.am !== '--' && i.number === liveResults.am) ||
@@ -653,13 +757,22 @@
                         totalPayout += orderWinPayout;
                     }
 
+                    let statusBadge = '';
+                    if (order.status === 'Confirmed') {
+                        statusBadge = hasWin 
+                            ? `<span class="bg-emerald-500 text-slate-950 font-bold px-2 py-0.5 rounded">🎉 ပေါက်မဲ ဖြစ်သည်</span>`
+                            : `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold px-2 py-0.5 rounded">✓ Confirmed</span>`;
+                    } else if (order.status === 'Declined') {
+                        statusBadge = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold px-2 py-0.5 rounded">❌ Declined (ငြင်းပယ်ထားသည်)</span>`;
+                    } else {
+                        statusBadge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold px-2 py-0.5 rounded">⏳ Pending (ငွေစစ်နေသည်)</span>`;
+                    }
+
                     return `
                         <div class="bg-slate-800/60 p-3 rounded-xl border ${hasWin ? 'border-emerald-500/80 shadow-md shadow-emerald-950' : 'border-slate-700/80'} space-y-2">
                             <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/50 pb-2">
                                 <span>${order.id} (${order.date})</span>
-                                <span class="px-2 py-0.5 rounded ${order.status === 'Confirmed' ? (hasWin ? 'bg-emerald-500 text-slate-950 font-bold' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold') : 'bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold'}">
-                                    ${order.status === 'Confirmed' ? (hasWin ? '🎉 ပေါက်မဲ ဖြစ်သည်' : '✓ Confirmed (ငွေလက်ခံရရှိပြီး)') : '⏳ Pending (ငွေစစ်နေသည်)'}
-                                </span>
+                                ${statusBadge}
                             </div>
                             <div class="space-y-1">
                                 ${itemsHtml}
@@ -672,18 +785,20 @@
                                 </div>
                             </div>
 
-                            ${(isAdminLoggedIn && order.status === 'Pending') ? `
-                                <button onclick="adminApproveOrder('${order.id}')" class="w-full mt-2 bg-emerald-600/80 hover:bg-emerald-600 text-white font-bold py-1.5 rounded-lg text-xs transition-all flex items-center justify-center gap-1 border border-emerald-500/50">
-                                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                                    [Admin] အတည်ပြုမည် (Confirm)
-                                </button>
+                            ${isAdminLoggedIn ? `
+                                <div class="flex gap-2 pt-2 border-t border-slate-700/50">
+                                    ${order.status === 'Pending' ? `
+                                        <button onclick="adminApproveOrder('${order.id}')" class="flex-1 bg-emerald-600/80 hover:bg-emerald-600 text-white font-bold py-1 rounded text-xs">Confirm</button>
+                                        <button onclick="adminDeclineOrder('${order.id}')" class="flex-1 bg-amber-600/80 hover:bg-amber-600 text-white font-bold py-1 rounded text-xs">Decline</button>
+                                    ` : ''}
+                                    <button onclick="adminDeleteOrder('${order.id}')" class="bg-rose-600/80 hover:bg-rose-600 text-white font-bold px-3 py-1 rounded text-xs">Delete</button>
+                                </div>
                             ` : ''}
                         </div>
                     `;
                 }).join('');
             }
 
-            // Admin Dashboard Summary Update
             if (isAdminLoggedIn) {
                 const netProfit = totalBets - totalPayout;
                 document.getElementById('adminTotalBets').innerText = totalBets.toLocaleString() + ' Ks';
@@ -691,11 +806,7 @@
                 
                 const netProfitEl = document.getElementById('adminNetProfit');
                 netProfitEl.innerText = netProfit.toLocaleString() + ' Ks';
-                if (netProfit >= 0) {
-                    netProfitEl.className = "font-bold text-emerald-400 text-sm";
-                } else {
-                    netProfitEl.className = "font-bold text-rose-400 text-sm";
-                }
+                netProfitEl.className = netProfit >= 0 ? "font-bold text-emerald-400 text-sm" : "font-bold text-rose-400 text-sm";
             }
 
             lucide.createIcons();
