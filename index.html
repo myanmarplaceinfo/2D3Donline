@@ -20,7 +20,7 @@
         .blue-gradient { background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen pb-10">
 
     <!-- Header / Navbar -->
     <header class="sticky top-0 z-40 glass border-b border-slate-700/50 px-4 py-3 shadow-lg">
@@ -29,19 +29,27 @@
                 <div class="w-10 h-10 rounded-full blue-gradient flex items-center justify-center font-bold text-slate-950 text-xl shadow-md border border-sky-300">N</div>
                 <div>
                     <h1 class="font-bold text-lg leading-tight text-amber-400">2D / 3D Store</h1>
-                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ် </p>
+                    <p class="text-xs text-slate-400">တရားဝင်ဒိုင် တိုက်ရိုက်စနစ်</p>
                 </div>
             </div>
+            <!-- Header Icons / Controls -->
             <div class="flex items-center space-x-2">
-                <button onclick="toggleCalendarModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
+                <!-- Calendar Icon -->
+                <button onclick="toggleCalendarModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700" title="ပြက္ခဒိန်">
                     <i data-lucide="calendar" class="w-5 h-5 text-amber-400"></i>
                 </button>
-                <button onclick="toggleCartModal()" class="relative p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
+                <!-- Cart Icon -->
+                <button onclick="toggleCartModal()" class="relative p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700" title="ဈေးခြင်း">
                     <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                     <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
-                <button onclick="toggleHistoryModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
+                <!-- Customer History Icon -->
+                <button onclick="toggleHistoryModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700" title="ထိုးခဲ့သော စာရင်းများ">
                     <i data-lucide="history" class="w-5 h-5"></i>
+                </button>
+                <!-- Admin Shield Icon သီးသန့် -->
+                <button onclick="toggleAdminModalDirectly()" class="p-2 bg-slate-800 rounded-full text-amber-400 hover:text-amber-300 border border-amber-500/30" title="Admin Mode">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
@@ -139,6 +147,18 @@
         </div>
     </main>
 
+    <!-- Footer / Contact Section (Telegram @skyone8888 သီးသန့်) -->
+    <footer class="max-w-4xl mx-auto px-4 mt-8 text-center border-t border-slate-800 pt-6 pb-12">
+        <h3 class="text-xs text-slate-400 font-bold mb-3">အလျော်ငွေ တောင်းခံရန် / ဆက်သွယ်ရန်</h3>
+        <div class="flex justify-center items-center">
+            <a href="https://t.me/skyone8888" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-sky-400 px-5 py-2.5 rounded-xl border border-slate-700 flex items-center gap-2 font-bold shadow-md hover:border-sky-500 transition-all">
+                <i class="fa-brands fa-telegram text-xl"></i>
+                <span>Telegram: @skyone8888</span>
+            </a>
+        </div>
+        <p class="text-[10px] text-slate-500 mt-4">© 2026 2D/3D Online Store. All rights reserved.</p>
+    </footer>
+
     <!-- Calendar Modal -->
     <div id="calendarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
         <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
@@ -196,7 +216,7 @@
         </div>
     </div>
 
-    <!-- History Modal -->
+    <!-- History & Admin Modal -->
     <div id="historyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
         <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -389,6 +409,14 @@
         function toggleCalendarModal() { document.getElementById('calendarModal').classList.toggle('hidden'); }
         function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
         function toggleHistoryModal() { document.getElementById('historyModal').classList.toggle('hidden'); }
+
+        // Header ရှိ Admin Shield Icon ကို နှိပ်လျှင် တိုက်ရိုက် Admin Login ခေါ်သည့် Function
+        function toggleAdminModalDirectly() {
+            toggleHistoryModal();
+            if (!isAdminLoggedIn) {
+                toggleAdminView();
+            }
+        }
 
         function submitOrder() {
             if(cart.length === 0) return;
