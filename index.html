@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D & 3D Online Store - Nay Oake</title>
+    <title>2D&3D Website </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK (v8 Compatible version) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
         body { font-family: 'Padauk', sans-serif; background-color: #0f172a; color: #f8fafc; }
@@ -28,6 +33,9 @@
                 </div>
             </div>
             <div class="flex items-center space-x-2">
+                <button onclick="toggleCalendarModal()" class="p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
+                    <i data-lucide="calendar" class="w-5 h-5 text-amber-400"></i>
+                </button>
                 <button onclick="toggleCartModal()" class="relative p-2 bg-slate-800 rounded-full text-slate-200 hover:text-white border border-slate-700">
                     <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                     <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
@@ -126,6 +134,33 @@
         </div>
     </main>
 
+    <!-- Calendar Modal -->
+    <div id="calendarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-slate-200 text-lg flex items-center gap-2">
+                    <i data-lucide="calendar-days" class="w-5 h-5 text-amber-400"></i>
+                    2D / 3D ပွဲစဉ်ပြက္ခဒိန်
+                </h3>
+                <button onclick="toggleCalendarModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-3 py-2 text-sm text-slate-300">
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                    <h4 class="font-bold text-amber-400 mb-1">📅 2D ထွက်မည့်ရက်များ</h4>
+                    <p class="text-xs text-slate-400">တနင်္လာ မှ သောကြာနေ့အထိ (တစ်နေ့လျှင် ၂ ကြိမ် - 12:01 PM & 04:30 PM)</p>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                    <h4 class="font-bold text-amber-400 mb-1">🚫 2D ပိတ်ရက်များ</h4>
+                    <p class="text-xs text-slate-400">စနေ၊ တနင်္ဂနွေ နှင့် ထိုင်းနိုင်ငံ တရားဝင် ရုံးပိတ်ရက်များ</p>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+                    <h4 class="font-bold text-amber-400 mb-1">🎲 3D ထွက်မည့်ရက်များ</h4>
+                    <p class="text-xs text-slate-400">လစဉ် (၁) ရက်နေ့ နှင့် (၁၆) ရက်နေ့များ (ညနေ 03:30 PM)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Modal -->
     <div id="cartModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
         <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[85vh] flex flex-col">
@@ -162,7 +197,7 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <h3 class="font-bold text-slate-200 text-lg flex items-center gap-2">
                     <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
-                    ထိုးခဲ့သော စာရင်းများ
+                    ထိုးခဲ့သော စာရင်းများ (Live Database)
                 </h3>
                 <button onclick="toggleHistoryModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
@@ -170,18 +205,46 @@
         </div>
     </div>
 
-    <!-- JavaScript logic -->
+    <!-- Firebase Logic & Application Scripts -->
     <script>
+        // အစ်ကို့ Firebase Config အချက်အလက်များ
+        const firebaseConfig = {
+            apiKey: "AIzaSyBf5q8K7WEI8USJ6aui3VODa_nlp3td37I",
+            authDomain: "my2d3dwebsite.firebaseapp.com",
+            databaseURL: "https://my2d3dwebsite-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "my2d3dwebsite",
+            storageBucket: "my2d3dwebsite.firebasestorage.app",
+            messagingSenderId: "530241874089",
+            appId: "1:530241874089:web:61aaeb7b7889c3815e21b8",
+            measurementId: "G-2P1Z0X9VNZ"
+        };
+
+        // Firebase ကို အစပျိုးခြင်း
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         let currentMode = '2D';
         let isR = false;
         let cart = [];
-        let history = JSON.parse(localStorage.getItem('2d3d_history') || '[]');
-        const ADMIN_PASSCODE = "331249"; // အစ်ကို သတ်မှတ်ထားသော Passcode
+        let history = [];
+        const ADMIN_PASSCODE = "331249";
 
         window.onload = function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('todayDateStr').innerText = today;
             lucide.createIcons();
+
+            // Firebase မှ စာရင်းများကို Realtime (စက္ကန့်နှင့်အမျှ) စောင့်ကြည့်ခြင်း
+            db.ref('orders').on('value', (snapshot) => {
+                const data = snapshot.val();
+                history = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        history.unshift(data[key]);
+                    });
+                }
+                renderHistory();
+            });
         };
 
         function switchMode(mode) {
@@ -222,12 +285,8 @@
             const num = document.getElementById('numInput').value.trim();
             const amt = parseInt(document.getElementById('amountInput').value);
 
-            if(!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) {
-                return;
-            }
-            if(!amt || amt < 100) {
-                return;
-            }
+            if(!num || (currentMode === '2D' && num.length !== 2) || (currentMode === '3D' && num.length !== 3)) return;
+            if(!amt || amt < 100) return;
 
             cart.push({ id: Date.now(), mode: currentMode, number: num, amount: amt });
             document.getElementById('numInput').value = '';
@@ -270,60 +329,52 @@
             updateCartUI();
         }
 
+        function toggleCalendarModal() { document.getElementById('calendarModal').classList.toggle('hidden'); }
         function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
-        function toggleHistoryModal() { 
-            document.getElementById('historyModal').classList.toggle('hidden');
-            renderHistory();
-        }
+        function toggleHistoryModal() { document.getElementById('historyModal').classList.toggle('hidden'); }
 
+        // Firebase သို့ စာရင်း အလိုအလျောက် ပို့ပေးသည့် Function
         function submitOrder() {
             if(cart.length === 0) return;
 
             const method = document.getElementById('paymentMethod').value;
             const total = cart.reduce((sum, item) => sum + item.amount, 0);
-            const phoneNo = "09400081765";
-
-            // Clipboard Auto-Copy
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(phoneNo);
-            }
+            const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
             const newOrder = {
-                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                id: orderId,
                 date: new Date().toLocaleString('en-US', { hour12: true }),
-                items: [...cart],
+                items: cart,
                 total: total,
                 payment: method,
                 status: 'Pending'
             };
 
-            history.unshift(newOrder);
-            localStorage.setItem('2d3d_history', JSON.stringify(history));
+            // Firebase ရဲ့ Database ထဲသို့ စာရင်းအသစ် လှမ်းပို့ခြင်း
+            db.ref('orders/' + orderId).set(newOrder, (error) => {
+                if (!error) {
+                    cart = [];
+                    updateCartUI();
+                    toggleCartModal();
 
-            cart = [];
-            updateCartUI();
-            toggleCartModal();
-
-            // Alert မပြတော့ဘဲ KBZPay တိုက်ရိုက်ပွင့်မည်
-            setTimeout(() => {
-                if(method.includes('KBZPay')) {
-                    window.location.href = "kbzpay://";
-                } else if(method.includes('WaveMoney')) {
-                    window.location.href = "wavepay://";
+                    // KPay / WavePay ပွင့်စေခြင်း
+                    setTimeout(() => {
+                        if(method.includes('KBZPay')) window.location.href = "kbzpay://";
+                        else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
+                    }, 300);
+                } else {
+                    alert("စာရင်းပို့ဆောင်ရာတွင် အမှားအယွင်းရှိပါသည်: " + error.message);
                 }
-            }, 300);
+            });
         }
 
-        // Admin မှ Passcode ရိုက်၍ Approve ပေးသည့် စနစ်
+        // Admin မှ Passcode ရိုက်၍ Confirm လိုက်ပါက Firebase ထဲတွင် ပြောင်းလဲခြင်း
         function adminApproveOrder(orderId) {
             const inputCode = prompt("Admin Passcode ရိုက်ထည့်ပါ:");
             if(inputCode === ADMIN_PASSCODE) {
-                const orderIndex = history.findIndex(o => o.id === orderId);
-                if(orderIndex !== -1) {
-                    history[orderIndex].status = 'Confirmed';
-                    localStorage.setItem('2d3d_history', JSON.stringify(history));
-                    renderHistory();
-                }
+                db.ref('orders/' + orderId).update({
+                    status: 'Confirmed'
+                });
             } else if (inputCode !== null) {
                 alert("Passcode မှားယွင်းနေပါသည်။");
             }
