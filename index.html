@@ -559,8 +559,17 @@
             db.ref('orders/' + orderId).set(newOrder, (error) => {
                 if (!error) {
                     
-                    // ၂။ Telegram Bot ဆီ စာပို့ခြင်း
-                    let itemsSummary = cart.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
+                    // ⚡ စောင့်မနေတော့ဘဲ Customer ဘက်မှာ စာချက်ချင်း ပွင့်ပြပါမည်
+                    alert(`🎉 အော်ဒါ တင်ပြီးပါပြီ!\n\nOrder ID: ${orderId}\nစုစုပေါင်း: ${total.toLocaleString()} Ks\n\nကျေးဇူးပြု၍ ငွေလွှဲပေးပါရန်။`);
+
+                    // Cart ရှင်းမည် & Modal ပိတ်မည်
+                    const savedCart = [...cart];
+                    cart = [];
+                    updateCartUI();
+                    toggleCartModal();
+
+                    // ၂။ Telegram Bot ဆီ စာပို့ခြင်း (Background တွင် ပို့မည်)
+                    let itemsSummary = savedCart.map(i => `• [${i.mode}] <b>${i.number}</b> - ${i.amount.toLocaleString()} Ks`).join('\n');
                     let telegramMessage = `🛒 <b>အော်ဒါအသစ် ရောက်ရှိပါသည်။</b>\n\n` +
                                           `🆔 <b>Order ID:</b> ${orderId}\n` +
                                           `👤 <b>User ID:</b> ${userId}\n` +
@@ -575,22 +584,13 @@
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ message: telegramMessage })
-                    }).then(() => {
-                        cart = [];
-                        updateCartUI();
-                        toggleCartModal();
+                    }).catch(err => console.error("Telegram Noti Error:", err));
 
-                        // ၃။ Customer ထံ အော်ဒါ တင်ပြီးကြောင်း သတိပေးချက် ပြသခြင်း
-                        alert(`🎉 အော်ဒါ တင်ပြီးပါပြီ!\n\nOrder ID: ${orderId}\nစုစုပေါင်း: ${total.toLocaleString()} Ks\n\nကျေးဇူးပြု၍ ငွေလွှဲပေးပါရန်။`);
-
-                        // ၄။ ငွေလွှဲ App သို့ သွားခြင်း
-                        setTimeout(() => {
-                            if(method.includes('KBZPay')) window.location.href = "kbzpay://";
-                            else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
-                        }, 500);
-                    }).catch(err => {
-                        console.error("Telegram Noti Error:", err);
-                    });
+                    // ၃။ Payment App သို့ သွားခြင်း
+                    setTimeout(() => {
+                        if(method.includes('KBZPay')) window.location.href = "kbzpay://";
+                        else if(method.includes('WaveMoney')) window.location.href = "wavepay://";
+                    }, 300);
 
                 } else {
                     alert("အမှားအယွင်းရှိပါသည်: " + error.message);
